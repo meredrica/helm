@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  yaml-rocker:
+  - apiVersion: v2
+    created: "2022-02-17T12:53:33.425697365Z"
+    description: A Template that lets you specify most of the stuff to deploy a docker
+      image without knowing every detail of Openshift
+    digest: fea21de5f1a986329734f5f6f62046edb08c7081135afcdcdf1eb4d2cf5fd9c6
+    name: yaml-rocker
+    urls:
+    - https://github.com/meredrica/helm/releases/download/yaml-rocker-0.0.2/yaml-rocker-0.0.2.tgz
+    version: 0.0.2
+generated: "2022-02-17T12:53:33.425704165Z"
