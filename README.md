@@ -17,7 +17,7 @@ dependencies:
     repository: https://meredrica.github.io/helm/
 ```
 
-Now you can use theh yaml-rocker under the alias app like this:
+Now use the yaml-rocker in `values.yaml`
 ```yaml
 yaml-rocker:
   app: my-app
