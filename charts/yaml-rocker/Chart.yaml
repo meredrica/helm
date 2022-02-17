@@ -1,5 +1,0 @@
-apiVersion: v2
-description: A Template that lets you specify most of the stuff to deploy a docker
-  image without knowing every detail of Openshift
-name: yaml-rocker
-version: 0.0.1
