@@ -20,19 +20,19 @@ dependencies:
 Now you can use theh yaml-rocker under the alias app like this:
 ```yaml
 yaml-rocker:
-	app: my-app
-	name: my-name
-	version: 0.0.0
+  app: my-app
+  name: my-name
+  version: 0.0.0
 
-	image: alpine
-	tag: latest
+  image: alpine
+  tag: latest
 
-	cpu:
-		min: 100m
-		max: 1000m
-	memory:
-		min: 500Mi
-		max: 550Mi
+  cpu:
+    min: 100m
+    max: 1000m
+  memory:
+    min: 500Mi
+    max: 550Mi
 ```
 
 You can also specify and use an alias for the file and use it multiple times.
