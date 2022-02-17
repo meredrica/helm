@@ -1,0 +1,1 @@
+Thanks for using YAML Rocker. Making the world less awful one deployment at a time.

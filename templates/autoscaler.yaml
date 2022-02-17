@@ -1,0 +1,17 @@
+{{- $root:= . }}
+{{- with .Values.autoscale }}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "fullname" $root }}
+  labels:
+    app: {{ $root.Values.app }}
+spec:
+  scaleTargetRef:
+    kind: DeploymentConfig
+    name: {{ template "fullname" $root }}
+    apiVersion: apps.openshift.io/v1
+  minReplicas: {{ required ".Values.autoscale.min must be defined" .min }}
+  maxReplicas: {{ required ".Values.autoscale.max must be defined" .max }}
+  targetCPUUtilizationPercentage: {{ default 80 .percentage }}
+{{- end}}

@@ -1,0 +1,138 @@
+app: my-app
+name: my-name
+version: 0.0.0
+
+image: alpine
+tag: latest
+
+cpu:
+  min: 100m
+  max: 1000m
+memory:
+  min: 500Mi
+  max: 550Mi
+
+autoscale:
+  min: 1 # minimum pods
+  max: 4 # maximum pods
+  percentage: 100 # cpu usage in **openshift madness**. defaults to 80
+
+routes:
+  first-route:
+    host: my.host.domain.cloud
+    path: /the/path # optional
+    port: my-port # the 'name' of the port of the service or a port
+    service: my-service # optional
+    termination: edge # optional accepts anything you write here, be careful
+    annotations: # optional annotations
+      awesome/annotation: true
+  second-route:
+    host: my.other.host.domain.cloud
+    port: my-port
+
+ports:
+  my-port: # 'name' of the port
+    port: 100
+    target: 100 # defaults to port
+
+volumes:
+  my-volume:
+    path: /path/to/mount
+    readonly: false
+    subPath: sub/path/inside/volume # optional
+    acccessMode: ReadWriteOnce # optional
+    storage: 1Gi
+    annotations:
+      my-annotation: my-value
+env:
+  my-env-variable: my-env-variable-value
+  other-env-variable: my-env-variable-value
+
+rawenv:
+  my-podname:
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+
+configmaps:
+  my-config-map: # name and filename for the config map
+    path: /path/to/mount # path where the configmap shall be mounted
+    data: |- # **raw** data for the configmap
+     this is raw data
+
+secrets:
+  my-named-yaml-secret:
+    values:
+      val1.yaml: |-
+        foo: bar
+        baz:
+          - foo
+          - bar
+  my-named-secret:
+    from: external-secret
+    path: /path # if specified, mount the secret to this path
+    values:
+      val1: foo
+      val2: bar
+  my-secret:
+    path: /path # if specified, mount the secret to this path
+    values:
+      val1: foo
+      val2: bar
+  env-secret:
+    env: true # if true, mount the values as env variables
+    values:
+      env-val: foo
+      env-val2: bar
+
+mounts:
+  volumes: # same syntax as volumes but these are just mounted, not created
+    my-external-volume: # exact volume name
+      path: /my-external-volume
+  configmaps:
+    my-external-config-map: # exact config map name
+      path: /my-external-config-map
+  secrets:
+    my-external-secret:
+      path: /my-external-secret
+    named-secret:
+      from: external-secret
+      path: /my-named-external-secret
+  env: # mount secrets as env variables
+    MY_ENV_VALUE:
+      name: name-of-secret
+      key: key-in-secret
+
+service:
+    name: my-service
+
+serviceaccount: my-account
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+
+affinity:
+  preffered: false # if this is true it will result in a a preferred rule, otherwhise a required one
+  anti: false # if this is true, the affinity will actually be an anti affinity
+
+command: echo
+args:
+  - 'running'
+
+sidecars:
+  the-sidecar:
+    image: sideimage
+    tag: sidetag
+    cpu:
+      min: 100m
+      max: 1000m
+    memory:
+      min: 500Mi
+      max: 550Mi

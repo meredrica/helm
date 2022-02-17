@@ -1,0 +1,302 @@
+{{- $root := . }}
+{{- define "rocker.container" }}
+{{- $container:= .container }}
+{{- $name:= .name }}
+- name: {{ $name }}
+  image: {{ required "container.image must be specified" $container.image }}:{{- required "container.tag must be specified" $container.tag }}
+  imagePullPolicy: Always
+  {{- with $container.command }}
+  command:
+    - {{ . }}
+  {{- end }}
+  {{- with $container.args }}
+  args:
+    {{- range . }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  {{- with $container.readinessProbe }}
+  readinessProbe: {{. | toYaml | nindent 4 }}
+  {{- end }}
+  {{- with $container.livenessProbe }}
+  livenessProbe: {{. | toYaml | nindent 4 }}
+  {{- end }}
+  env:
+  {{- with $container.rawenv}}
+    {{- range $key, $val:= . }}
+    - name: {{ $key }}{{$val | toYaml | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- with $container.env }}
+    {{- range $key, $val:= .}}
+    - name: {{ $key }}
+      value: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
+  {{- with $container.secrets}}
+    {{- range $secretkey, $secret:= . }}
+    {{- if $secret.env }}
+    {{- range $key, $val:= $secret.values }}
+    - name: {{ $key }}
+      valueFrom:
+        secretKeyRef:
+          name: {{ $name }}-{{ $secretkey }}
+          key: {{ $key }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- if $container.mounts }}
+  {{- with $container.mounts.env }}
+    {{- range $key, $secret:= .}}
+    - name: {{ $key }}
+      valueFrom:
+        secretKeyRef:
+          name: {{ required "container.mounts.env-secrets.name must be specified" $secret.name }}
+          key: {{ required "container.mounts.env-secrets.key must be specified" $secret.key }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  ports:
+  {{- with $container.ports }}
+  {{- range $key, $port:= .}}
+    - name: {{ $key }}
+      containerPort: {{ default $port.port $port.target }}
+      protocol: TCP
+  {{- end }}
+  {{- end }}
+  {{- with $container.headless}}
+  {{- range $key, $port:= .ports}}
+    - name: {{ $key }}
+      containerPort: {{ default $port.port $port.target }}
+      protocol: TCP
+  {{- end }}
+  {{- end }}
+  resources:
+    requests:
+      cpu: {{ required "container.cpu.min must be specified" $container.cpu.min}}
+      memory: {{ required "container.memory.min must be specified" $container.memory.min}}
+    limits:
+      cpu: {{ required "container.cpu.max must be specified" $container.cpu.max}}
+      memory: {{ required "container.memory.max must be specified" $container.memory.max}}
+  volumeMounts:
+  {{- with $container.volumes }}
+    {{- range $key, $vol:= .}}
+    - name: {{ $name }}-volume-{{ $key }}
+      mountPath: {{ required ".volume.path is not defined" $vol.path}}
+      {{- with $vol.readonly }}
+      readOnly: {{ . }}
+      {{- end }}
+      {{- with $vol.subPath}}
+      subPath: {{ . }}
+      {{- end }}
+    {{- end}}
+  {{- end }}
+  {{- with $container.configmaps }}
+    {{- range $key, $configmap:= .}}
+    {{- if $configmap.path }}
+    - name: {{ $name }}-configmap-{{ template "safename" $key }}
+      mountPath: {{ $configmap.path}}
+    {{- end }}
+    {{- end}}
+  {{- end }}
+  {{- with $container.secrets }}
+    {{- range $key, $secret:= . }}
+    {{- if $secret.path }}
+    - name: {{ $name }}-secret-{{ $key }}
+      mountPath: {{ $secret.path }}
+      readOnly: true
+    {{- end}}
+    {{- end}}
+  {{- end}}
+  {{- if $container.mounts }}
+  {{- with $container.mounts.volumes }}
+    {{- range $key, $mount:= .}}
+    - name: {{ $name }}-mounted-volume-{{ $key }}
+      mountPath: {{ required ".mounts.volume.path is not defined" $mount.path}}
+      {{- with $mount.readonly }}
+      readOnly: {{ . }}
+      {{- end }}
+      {{- with $mount.subPath}}
+      subPath: {{ . }}
+      {{- end }}
+    {{- end}}
+  {{- end}}
+  {{- with $container.mounts.configmaps }}
+    {{- range $key, $configmap:= .}}
+    - name: {{ $name }}-mounted-configmap-{{ $key }}
+      mountPath: {{ required ".mounts.configmap.path is not defined" $configmap.path}}
+      readOnly: true
+    {{- end}}
+  {{- end}}
+  {{- with $container.mounts.secrets }}
+    {{- range $key, $secret:= . }}
+    - name: {{ $name }}-mounted-secret-{{ $key }}
+      mountPath: {{ required "mounts.secret.path is not defined" $secret.path }}
+      readOnly: true
+    {{- end}}
+  {{- end}}
+  {{- end}}
+{{- end }}
+
+{{- define "rocker.volumesForMountedConfigmaps" }}
+{{- $configmapMounts := .configmapMounts }}
+{{- $name:= .name }}
+{{- range $key, $mount:= $configmapMounts }}
+- name: {{ $name }}-mounted-configmap-{{ $key }}
+  configMap:
+    name: {{ $key }}
+{{- end }}
+{{- end }}
+
+{{- define "rocker.volumesForMountedSecrets" }}
+{{- $secretMounts := .secretMounts }}
+{{- $name:= .name }}
+{{- range $key, $mount:= $secretMounts }}
+- name: {{ $name }}-mounted-secret-{{ $key }}
+  secret:
+    secretName: {{- if $mount.from }} {{ $mount.from }}{{- else }} {{ $key }}{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "rocker.pvcsForVolumeMounts" }}
+{{- $mounts := .mounts }}
+{{- $name:= .name }}
+{{- range $key, $mount:= $mounts }}
+- name: {{ $name }}-mounted-volume-{{ $key }}
+  persistentVolumeClaim:
+    claimName: {{ $key }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.stateful }}
+apiVersion: apps/v1
+kind: StatefulSet
+{{- else }}
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+{{- end }}
+metadata:
+  name: {{ template "fullname" $root }}
+  labels:
+    app: {{ required ".Values.app must be specified" .Values.app }}
+
+spec:
+  {{- if.Values.headless }}
+  serviceName: {{ required ".Values.headless.name must bespecified when using headless services" .Values.headless.name }}
+  {{- else if .Values.stateful }}
+  serviceName: {{ template "fullname" $root }}
+  {{- end }}
+  replicas: {{ default 1 .Values.replicas }}
+  selector:
+    {{- if .Values.stateful }}
+    matchLabels:
+      app: {{ required ".Values.app must be specified" .Values.app }}
+      deploymentConfig: {{ template "fullname" $root }}
+      version: "{{ default "0.0.0" .Values.version }}"
+    {{- else }}
+    deploymentConfig: {{ template "fullname" $root }}
+    {{- end }}
+
+  {{- with .Values.strategy }}
+  strategy: {{ . | toYaml | nindent 4 }}
+  {{- end }}
+
+  template:
+    metadata:
+      name: {{ template "fullname" $root }}
+      labels:
+        app: {{ required ".Values.app must be specified" .Values.app }}
+        deploymentConfig: {{ template "fullname" $root }}
+        version: "{{ default "0.0.0" .Values.version }}"
+      {{- include "annotations" .Values.annotations | indent 6 }}
+
+    spec:
+      {{- with .Values.serviceaccount }}
+      serviceAccountName: {{ . }}
+      {{- end }}
+      containers:
+        {{ include "rocker.container" (dict "name" (include "fullname" $root) "container" .Values) | indent 6 }}
+        {{- with .Values.sidecars }}
+        {{- range $key, $sidecar:= . }}
+        {{ include "rocker.container" (dict "name" $key "container" $sidecar) | indent 6 }}
+        {{- end }}
+        {{- end }}
+
+      volumes:
+      {{- with .Values.volumes }}
+      {{- range $key, $volume:= . }}
+        - name: {{ template "fullname" $root }}-volume-{{ $key }}
+          persistentVolumeClaim:
+            claimName: {{ template "fullname" $root }}-{{ $key }}
+      {{- end }}
+      {{- end }}
+
+      {{- with .Values.configmaps }}
+      {{- range $key, $configmap:= . }}
+      {{- if $configmap.path}}
+        - name: {{ template "fullname" $root }}-configmap-{{ template "safename" $key }}
+          configMap:
+            name: {{ template "fullname" $root }}-{{ template "safename" $key }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+
+      {{- with .Values.secrets }}
+      {{- range $key, $secret:= . }}
+      {{- if $secret.path }}
+        - name: {{ template "fullname" $root }}-secret-{{ $key }}
+          secret:
+            secretName: {{ template "fullname" $root }}-{{ $key }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+
+      {{- if .Values.mounts }}
+      {{- with .Values.mounts.volumes }}
+      {{ include "rocker.pvcsForVolumeMounts" (dict "name" (include "fullname" $root) "mounts" .) | indent 8 }}
+      {{- end }}
+      {{- with .Values.mounts.configmaps }}
+      {{ include "rocker.volumesForMountedConfigmaps" (dict "name" (include "fullname" $root) "configmapMounts" .) | indent 8 }}
+      {{- end }}
+      {{- with .Values.mounts.secrets }}
+      {{ include "rocker.volumesForMountedSecrets" (dict "name" (include "fullname" $root) "secretMounts" .) | indent 8 }}
+      {{- end }}
+      {{- end }}{{/* ends "if .Volumes.mounts" */}}
+
+      {{- with .Values.sidecars }}
+      {{- range $key, $sidecar:= . }}
+      {{- if .mounts }}
+      {{- with .mounts.volumes }}
+      {{ include "rocker.pvcsForVolumeMounts" (dict "name" $key "mounts" .) | indent 8 }}
+      {{- end }}
+      {{- with.mounts.configmaps }}
+      {{ include "rocker.volumesForMountedConfigmaps" (dict "name" $key "configmapMounts" .) | indent 8 }}
+      {{- end }}
+      {{- with.mounts.secrets }}
+      {{ include "rocker.volumesForMountedSecrets" (dict "name" $key "secretMounts" .) | indent 8 }}
+      {{- end }}
+      {{- end }}{{/* ends "if mounts" */}}
+      {{- end }}{{/* ends "range $sidecar" */}}
+      {{- end }}{{/* ends "with .Values.sidecars" */}}
+
+      {{- with .Values.affinity }}
+      affinity:
+        {{- if .anti }}
+        podAntiAffinity:
+        {{- else }}
+        podAffinity:
+        {{- end }}
+          {{- if .preferred}}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          {{- else }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          {{- end }}
+            - labelSelector:
+                matchExpressions:
+                  - key: deploymentConfig
+                    operator: In
+                    values:
+                      - {{ template "fullname" $root }}
+              topologyKey: kubernetes.io/hostname
+      {{- end }}
