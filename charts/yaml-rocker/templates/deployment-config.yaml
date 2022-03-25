@@ -16,10 +16,10 @@
     {{- end }}
   {{- end }}
   {{- with $container.readinessProbe }}
-  readinessProbe: {{. | toYaml | nindent 4 }}
+  readinessProbe: {{ . | toYaml | nindent 4 }}
   {{- end }}
   {{- with $container.livenessProbe }}
-  livenessProbe: {{. | toYaml | nindent 4 }}
+  livenessProbe: {{ . | toYaml | nindent 4 }}
   {{- end }}
   env:
   {{- with $container.rawenv}}
