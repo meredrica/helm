@@ -54,8 +54,8 @@ configmaps:
 
 containers:
   'name':
-    image:
-    tag:
+    image: nginx
+    tag: latest
     policy: 'IfNotPresent' # imagePullPolicy
     command: # startup command
       - echo
@@ -65,12 +65,13 @@ containers:
       - blub
     ports:
       'name':
-        port:
+        port: 80
         protocol: 'TCP'
     env:
       'name': 'SOME_ENV_VALUE'
       'raw-from':
-        from: {}
+        raw:
+          somewhere: foo
     health: # healthchecks
       restart: 'Always' # restartPolicy
     mounts: # mounts
