@@ -1,0 +1,19 @@
+{{/*
+volumes:
+  'myVolumeName':
+    mode: 'ReadWriteOnce'
+    storage: '500Mi'
+*/}}
+{{- with .Values.volumes }}
+{{ range $name, $volume:= . }}
+{{ include "k8s-rocker.object" (list $ "v1" "PersistentVolumeClaim" $name $volume)
+}}
+spec:
+  accessModes:
+    - {{ default "ReadWriteOnce" $volume.accessMode }}
+  resources:
+    requests:
+      storage: {{ required "volume.storage must be defined" $volume.storage }}
+---
+{{- end }} {{/* end of range */}}
+{{- end }} {{/* end of with.values */}}

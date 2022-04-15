@@ -1,0 +1,116 @@
+# features:
+# make everything optional, allowing secrets only etc
+#
+# missing from yaml rocker for now:
+# affinity
+volumes:
+  'myVolumeName':
+    meta:
+      annotations:
+        bar: baz
+        vol: 1
+      labels:
+        foo: bar
+    mode: 'ReadWriteOnce'
+    storage: '500Mi'
+  'myVolumeName2':
+    meta:
+      annotations:
+        vol: 2
+    mode: 'ReadWriteOnce'
+    storage: '500Mi'
+
+secrets:
+  'name':
+    meta:
+      annotations:
+        foo: bar
+    strings:
+      'key': |
+         some sting value
+         possibly multiline
+    binary:
+      'key2':
+        file: test/secrets/file.secret
+      'key3':
+        file: test/secrets/image.jpg
+
+
+configmaps:
+  'name':
+    meta:
+    data:
+      'key': value
+      'key2': value2
+
+meta: # added to all objects
+  labels:
+    metalabel: foo
+  annotations:
+    metaannotation: bar
+
+containers:
+  'name':
+    image:
+    tag:
+    policy: 'IfNotPresent'
+    command: # startup command
+    args: # startup args
+    ports:
+      - port:
+        protocol: 'TCP' #
+    env:
+      'name': # if raw is specified, mount valuefrom etc #TODO: check if this is possible via templating
+        raw: {}
+    meta: # additional metadata
+    health: # healthchecks
+    mounts: # mounts
+      volumes:
+        'name':
+          path:
+      secrets:
+      env: # TODO
+      configmaps:
+    affinity: # passed raw into the affinity block
+
+
+test:
+  # podspec as above, used for helm test
+
+initContainers:
+  # podspec
+
+deployment:
+  meta:
+  strategy: # default is rolling
+  minReadySeconds: # minimum ready seconds
+  autoscaling:
+    meta:
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPU: 80
+    targetMemory: 80
+
+statefulset:
+  meta:
+  replicaCount: 1
+  policy: 'OrderedReady'
+  strategy: 'RollingUpdate'
+  minReadySeconds: # minimum ready seconds
+
+services:
+  meta:
+  'name':
+    port: 80
+    target: 80 # defaults to port
+    meta: # additional metadata
+
+ingress:
+  'name':
+    meta:
+    hosts:
+      'host.of.app':
+          '/':
+            pathType: 'Prefix'
+            to: 'servicename'
+            port: 8080
