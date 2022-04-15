@@ -5,7 +5,7 @@ volumes:
     storage: '500Mi'
 */}}
 {{- with .Values.volumes }}
-{{ range $name, $volume:= . }}
+{{- range $name, $volume:= . }}
 {{ include "k8s-rocker.object" (list $ "v1" "PersistentVolumeClaim" $name $volume)
 }}
 spec:

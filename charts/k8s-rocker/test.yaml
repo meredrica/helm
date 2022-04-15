@@ -35,7 +35,6 @@ secrets:
       'key3':
         file: test/secrets/image.jpg
 
-
 configmaps:
   'name':
     meta:
