@@ -16,7 +16,7 @@ metadata:
 {{- $meta = (deepCopy $.Values.meta | merge $in.meta )}}
 {{- end }}
   labels:
-    app: {{ $.Chart.Name }}
+    app: {{ include "k8s-rocker.name" $ }}
     {{- range $key, $value := $meta.labels }}
     {{ $key }}: {{ $value }}
     {{- end }} {{/* end of labels */}}
@@ -26,19 +26,6 @@ metadata:
     {{- end }} {{/* end of annotations*/}}
 {{- end }}  {{/* end of k8s-rocker.object }}
 
-
-{{- define "tmp"}}
-just copy paste space
-
-
-
-{{- end }} {{/* end of tmp */}}
-
-
-
-
-{{/*
-{{- end }} {{/* end of k8s-rocker.meta */}}
 
 {{/*
 Expand the name of the chart.

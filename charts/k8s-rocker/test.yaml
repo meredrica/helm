@@ -1,8 +1,18 @@
 # features:
 # make everything optional, allowing secrets only etc
 #
-# missing from yaml rocker for now:
-# affinity
+# TODO:
+# container.envFrom
+# -> https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Container
+nameOverride: # defaults to .Chart.Name
+
+meta: # added to all objects
+  labels:
+    # app: is automatically added with the name of the install
+    metalabel: foo
+  annotations:
+    metaannotation: bar
+
 volumes:
   'myVolumeName':
     meta:
@@ -13,18 +23,14 @@ volumes:
         foo: bar
     mode: 'ReadWriteOnce'
     storage: '500Mi'
-  'myVolumeName2':
-    meta:
-      annotations:
-        vol: 2
-    mode: 'ReadWriteOnce'
-    storage: '500Mi'
 
 secrets:
   'name':
     meta:
-      annotations:
+      labels:
         foo: bar
+      annotations:
+        bar: baz
     strings:
       'key': |
          some sting value
@@ -38,31 +44,35 @@ secrets:
 configmaps:
   'name':
     meta:
+      labels:
+        foo: bar
+      annotations:
+        bar: baz
     data:
       'key': value
       'key2': value2
-
-meta: # added to all objects
-  labels:
-    metalabel: foo
-  annotations:
-    metaannotation: bar
 
 containers:
   'name':
     image:
     tag:
-    policy: 'IfNotPresent'
+    policy: 'IfNotPresent' # imagePullPolicy
     command: # startup command
+      - echo
+      - foo
     args: # startup args
+      - bla
+      - blub
     ports:
-      - port:
-        protocol: 'TCP' #
+      'name':
+        port:
+        protocol: 'TCP'
     env:
-      'name': # if raw is specified, mount valuefrom etc #TODO: check if this is possible via templating
-        raw: {}
-    meta: # additional metadata
+      'name': 'SOME_ENV_VALUE'
+      'raw-from':
+        from: {}
     health: # healthchecks
+      restart: 'Always' # restartPolicy
     mounts: # mounts
       volumes:
         'name':
@@ -72,7 +82,6 @@ containers:
       configmaps:
     affinity: # passed raw into the affinity block
 
-
 test:
   # podspec as above, used for helm test
 
@@ -81,8 +90,8 @@ initContainers:
 
 deployment:
   meta:
-  strategy: # default is rolling
-  minReadySeconds: # minimum ready seconds
+  strategy: 'RollingUpdate' # default is rolling
+  minReadySeconds: 0 # minimum ready seconds
   autoscaling:
     meta:
     minReplicas: 1
