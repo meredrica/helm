@@ -52,7 +52,7 @@ configmaps:
       'key': value
       'key2': value2
 
-containers:
+pod: # the main pod
   'name':
     image: nginx
     tag: latest
@@ -72,8 +72,20 @@ containers:
       'raw-from':
         raw:
           somewhere: foo
-    health: # healthchecks
-      restart: 'Always' # restartPolicy
+    health:
+      live: # a probe spec
+        httpGet:
+          port: 80
+          path: '/'
+      ready: # a probe spec
+        httpGet:
+          port: 80
+          path: '/ready'
+      start: # a probe spec
+        httpGet:
+          port: 80
+          path: '/start'
+    restart: 'Always' # restartPolicy
     mounts: # mounts
       volumes:
         'name':
@@ -86,8 +98,11 @@ containers:
 test:
   # podspec as above, used for helm test
 
-initContainers:
-  # podspec
+init:
+  # podspec for initing the pod
+  'foo':
+    image: bar
+    tag: baz
 
 deployment:
   meta:

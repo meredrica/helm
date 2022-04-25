@@ -30,10 +30,11 @@ containers:
 {{- $container:= index . 2 }}
 image: {{ required "container.image is required" $container.image }}
 tag: {{ required "container.tag is required" $container.tag }}
-imagePullPolicy: {{default "IfNotPresent" $container.policy }}
+imagePullPolicy: {{ default "IfNotPresent" $container.policy }}
+restartPolicy: {{ default "Always" $container.restart}}
 {{- /*
 
----- comannd and args
+---- command and args
 */}}
 {{- with $container.command }}
 command:
@@ -75,6 +76,23 @@ ports:
 {{- end }}
 {{- /*
 
-TODO: health, mounts, affinity
+---- probes
+*/}}
+
+{{- with $container.health }}
+{{- with .live }}
+livenessProbe: {{ . | toYaml | nindent 2 }}
+{{- end }}
+{{- with .ready }}
+readinessProbe: {{ . | toYaml | nindent 2 }}
+{{- end }}
+{{- with .start }}
+startupProbe: {{ . | toYaml | nindent 2 }}
+{{- end }}
+{{- end }}{{/* end of $container.health */}}
+
+{{- /*
+
+TODO: mounts, affinity
 */}}
 {{- end }}{{/* end of k8s-rocker.container */}}

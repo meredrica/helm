@@ -18,12 +18,21 @@ spec:
   selector:
     matchLabels:
       app: {{ include "k8s-rocker.name" $ }}
-  minReadySeconds: {{ default 8 .minReadySeconds }}
+  minReadySeconds: {{ default 0 .minReadySeconds }}
   strategy:
     type: {{ default "RollingUpdate" .strategy }}
   template:
-    {{- range $name, $container := $.Values.containers }}
-    {{- include "k8s-rocker.container" (list $ $name $container) | indent 4 }}
+    spec:
+    {{- with $.Values.init }}
+      initContainers:
+      {{- range $name, $init := . }}
+      - {{- include "k8s-rocker.container" (list $ $name $init) | indent 10 }}
+      {{- end }}
     {{- end }}
+
+      containers:
+        {{- range $name, $container := $.Values.pod}}
+        - {{- include "k8s-rocker.container" (list $ $name $container) | indent 10 }}
+        {{- end }}
 
 {{- end }}
