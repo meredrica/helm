@@ -115,6 +115,13 @@ resources:
 {{- end }} {{/* end of $container.cpu || $container.memory*/}}
 {{- /*
 
+---- raw block
+*/}}
+{{- with $container.raw }}
+{{ . | toYaml | nindent 2 }}
+{{- end }}
+{{- /*
+
 TODO: mounts, affinity
 */}}
 {{- end }}{{/* end of k8s-rocker.container */}}

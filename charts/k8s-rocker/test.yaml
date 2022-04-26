@@ -88,7 +88,7 @@ pod: # the main pod
       secrets:
       env: # TODO
       configmaps:
-    affinity: # passed raw into the affinity block
+    raw: # passed raw into the container spec
 
 test:
   # podspec as above, used for helm test
