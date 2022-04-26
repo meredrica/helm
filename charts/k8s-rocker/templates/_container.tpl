@@ -28,10 +28,9 @@ containers:
 {{- $ := index . 0 }}
 {{- $name:= index . 1 }}
 {{- $container:= index . 2 }}
-image: {{ required "container.image is required" $container.image }}
-tag: {{ required "container.tag is required" $container.tag }}
+name: {{ $name }}
+image: {{ required "container.image is required" $container.image }}:{{ required "container.tag is required" $container.tag }}
 imagePullPolicy: {{ default "IfNotPresent" $container.policy }}
-restartPolicy: {{ default "Always" $container.restart}}
 {{- /*
 
 ---- command and args
@@ -65,6 +64,7 @@ ports:
 ---- env
 */}}
 {{- with $container.env }}
+env:
   {{- range $name, $env := . }}
   {{- if (kindIs "map" $env ) }}
   - name: {{ $name}}{{ $env | toYaml | nindent 4}}

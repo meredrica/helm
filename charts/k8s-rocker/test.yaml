@@ -14,21 +14,17 @@ meta: # added to all objects
     metaannotation: bar
 
 volumes:
-  'myVolumeName':
+  'name':
     meta:
       annotations:
         bar: baz
         vol: 1
-      labels:
-        foo: bar
     mode: 'ReadWriteOnce'
     storage: '500Mi'
 
 secrets:
   'name':
     meta:
-      labels:
-        foo: bar
       annotations:
         bar: baz
     strings:
@@ -44,8 +40,6 @@ secrets:
 configmaps:
   'name':
     meta:
-      labels:
-        foo: bar
       annotations:
         bar: baz
     data:
@@ -53,25 +47,25 @@ configmaps:
       'key2': value2
 
 pod: # the main pod
-  'name':
-    image: nginx
+  'web':
+    image: busybox
     tag: latest
     policy: 'IfNotPresent' # imagePullPolicy
     command: # startup command
       - echo
-      - foo
     args: # startup args
-      - bla
-      - blub
+      - $NAME
+      - $raw-from
     ports:
       'name':
         port: 80
         protocol: 'TCP'
     env:
-      'name': 'SOME_ENV_VALUE'
+      'NAME': 'SOME_ENV_VALUE'
       'raw-from':
-        raw:
-          somewhere: foo
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
     health:
       live: # a probe spec
         httpGet:
@@ -101,8 +95,10 @@ test:
 init:
   # podspec for initing the pod
   'foo':
-    image: bar
-    tag: baz
+    image: busybox
+    tag: latest
+    command:
+      - true
 
 deployment:
   meta:
@@ -110,6 +106,8 @@ deployment:
   minReadySeconds: 0 # minimum ready seconds
   autoscaling:
     meta:
+      annotations:
+        "some": "scaler"
     minReplicas: 1
     maxReplicas: 100
     targetCPU: 80
