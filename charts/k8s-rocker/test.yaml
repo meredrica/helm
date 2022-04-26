@@ -109,7 +109,7 @@ deployment:
       annotations:
         "some": "scaler"
     minReplicas: 1
-    maxReplicas: 100
+    maxReplicas: 10
     targetCPU: 80
     targetMemory: 80
 
