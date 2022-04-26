@@ -7,7 +7,7 @@ meta: # added to all objects
   annotations:
     metaannotation: bar
 
-volumes:
+volumeClaims:
   'name':
     meta:
       annotations:

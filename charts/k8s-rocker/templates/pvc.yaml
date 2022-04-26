@@ -4,7 +4,7 @@ volumes:
     mode: 'ReadWriteOnce'
     storage: '500Mi'
 */}}
-{{- with .Values.volumes }}
+{{- with .Values.volumeClaims }}
 {{- range $name, $volume:= . }}
 {{ include "k8s-rocker.object" (list $ "v1" "PersistentVolumeClaim" $name $volume)
 }}
