@@ -1,1 +1,18 @@
-#TODO
+{{/**
+service:
+  name: 'name'
+  type: 'ClusterIp'
+  port: 80
+  target: 80 # defaults to port
+  meta:
+**/}}
+{{- with .Values.service }}
+{{- include "k8s-rocker.object" (list $ "v1" "Service" .name .) }}
+spec:
+  type: {{ default "ClusterIP" .type }}
+  ports:
+    - port: {{ .port }}
+      targetPort: {{ default .port .target }}
+  selector:
+    {{- include "k8s-rocker.matchLabels" (list $) | indent 6 }}
+{{- end}}{{/** end of .Values.service **/}}
