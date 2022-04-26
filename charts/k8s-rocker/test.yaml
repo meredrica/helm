@@ -84,7 +84,10 @@ pod: # the main pod
     mounts: # mounts
       volumes:
         'name':
-          path:
+          path: '/some/path'
+          readOnly: true
+          subPath: '.something'
+
       secrets:
       env: # TODO
       configmaps:

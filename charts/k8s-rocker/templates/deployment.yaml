@@ -39,4 +39,16 @@ spec:
         - {{- include "k8s-rocker.container" (list $ $name $container) | indent 10 }}
         {{- end }}
 
+      volumes:
+        {{- range $name, $container := $.Values.pod }}
+        {{- with $container.mounts }}
+          {{- with .volumes }}
+          {{- range $name, $volume:= . }}
+            - name: {{ $name }}
+              persistentVolumeClaim:
+                claimName: {{ $name }}
+          {{- end }} {{/* end of volumes range */}}
+        {{- end }}{{/* end of .volumes*/}}
+      {{- end }}{{/* end of $container.mounts */}}
+      {{- end }}{{/* end of container range*/}}
 {{- end }}

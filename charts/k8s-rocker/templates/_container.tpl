@@ -112,16 +112,33 @@ resources:
   {{- with $container.cpu }}
     cpu: {{ .min}}
   {{- end }}
-{{- end }} {{/* end of $container.cpu || $container.memory*/}}
+{{- end }} {{/* end of $container.cpu || $container.memory */}}
+
+{{- /*
+
+---- mounts
+*/}}
+{{- with $container.mounts }}
+volumeMounts:
+{{- with .volumes }}
+{{- range $name, $volume:= .}}
+  - name: {{ $name }}
+    mountPath: {{ required "volume.path is required" $volume.path }}
+    {{- with $volume.readOnly }}
+    readOnly: {{ . }}
+    {{- end }}
+    {{- with $volume.subPath }}
+    subPath: {{ . }}
+    {{- end }}
+{{- end }} {{/* end of volumes range */}}
+# TODO: add the other mounts here
+{{- end }} {{/* end of volumeMounts */}}
+{{- end }}{{/* end of $container.mounts */}}
 {{- /*
 
 ---- raw block
 */}}
 {{- with $container.raw }}
 {{ . | toYaml | nindent 2 }}
-{{- end }}
-{{- /*
-
-TODO: mounts, affinity
-*/}}
+{{- end }}{{/* end of raw */}}
 {{- end }}{{/* end of k8s-rocker.container */}}
