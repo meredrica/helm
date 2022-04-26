@@ -5,6 +5,9 @@ containers:
     image:
     tag:
     policy: 'IfNotPresent'
+    memory:
+      min: 100Mi
+      max: 110Mi
     command: # startup command
     args: # startup args
     ports:
@@ -78,7 +81,6 @@ env:
 
 ---- probes
 */}}
-
 {{- with $container.health }}
 {{- with .live }}
 livenessProbe: {{ . | toYaml | nindent 2 }}
@@ -90,7 +92,27 @@ readinessProbe: {{ . | toYaml | nindent 2 }}
 startupProbe: {{ . | toYaml | nindent 2 }}
 {{- end }}
 {{- end }}{{/* end of $container.health */}}
+{{- /*
 
+---- resources
+*/}}
+{{- if or $container.cpu $container.memory}}
+resources:
+  limits:
+  {{- with $container.cpu }}
+    cpu: {{ .max }}
+  {{- end }}
+  {{- with $container.memory }}
+    memory: {{ .max }}
+  {{- end }}
+  requests:
+  {{- with $container.memory }}
+    memory: {{ .max}}
+  {{- end }}
+  {{- with $container.cpu }}
+    cpu: {{ .min}}
+  {{- end }}
+{{- end }} {{/* end of $container.cpu || $container.memory*/}}
 {{- /*
 
 TODO: mounts, affinity

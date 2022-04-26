@@ -42,9 +42,16 @@ configmaps:
 
 pod: # the main pod
   'web':
-    image: busybox
+    image: nginx
     tag: latest
     policy: 'IfNotPresent' # imagePullPolicy
+    cpu:
+      min: 100m
+      max: 200m
+    memory:
+      min: 100Mi
+      max: 110Mi
+
     command: # startup command
       - echo
     args: # startup args
