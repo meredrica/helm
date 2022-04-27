@@ -1,1 +1,37 @@
-#TODO
+{{/*
+ingress:
+  'name':
+    meta:
+    class:
+    hosts:
+      'host.of.app':
+          '/':
+            pathType: 'Prefix'
+            to: 'servicename'
+            port: 8080
+*/}}
+{{- with .Values.ingress}}
+{{- range $name, $ingress:= . }}
+{{- include "k8s-rocker.object" (list $ "networking.k8s.io/v1"  "Ingress" $name  $ingress) }}
+spec:
+{{- with $ingress.class }}
+  ingressClassName: {{ . }}
+{{- end }}
+  rules:
+    {{- range $host, $rule:= $ingress.hosts }}
+    - host: {{ $host }}
+      http:
+        paths:
+          {{- range $name, $path:= $rule }}
+          - path: {{ $name }}
+            pathType: {{ default "ImplementationSpecific" $path.pathType }}
+            backend:
+              service:
+                name: {{ $path.to }}
+                port:
+                  number: {{ $path.port }}
+          {{- end }}
+    {{- end }}
+---
+{{- end }}
+{{- end }}

@@ -124,7 +124,7 @@ statefulset:
   minReadySeconds: # minimum ready seconds
 
 service:
-  name: 'name'
+  name: 'servicename'
   type: 'ClusterIP'
   port: 80
   target: 80 # defaults to port
@@ -138,6 +138,6 @@ ingress:
     hosts:
       'host.of.app':
           '/':
-            pathType: 'Prefix'
+            type: 'ImplementationSpecific'
             to: 'servicename'
             port: 8080
