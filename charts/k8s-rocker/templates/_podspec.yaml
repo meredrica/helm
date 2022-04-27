@@ -1,0 +1,46 @@
+{{- define "k8s-rocker.podspec" }}
+{{- $ := . }}
+restartPolicy: {{ default "Always" $.restart}}
+{{- $containers:= (deepCopy $.Values.pod )}}
+{{- with $.Values.init }}
+{{- $containers = merge $containers (deepCopy .) }}
+initContainers:
+{{- range $name, $init := . }}
+- {{- include "k8s-rocker.container" (list $ $name $init) | indent 10 }}
+{{- end }}
+{{- end }}
+containers:
+{{- range $name, $container := $.Values.pod }}
+  - {{- include "k8s-rocker.container" (list $ $name $container) | indent 10 }}
+{{- end }}
+volumes:
+{{- range $name, $container := $containers }}
+  {{- with $container.mounts }}
+  {{- with .configmaps }}
+  {{- range $name, $configMap:= . }}
+  - name: config-{{ $name }}
+    configMap:
+      name: {{ $name }}
+  {{- end }}{{/* end of configmap range */}}
+  {{- end }}{{/* end of .configmaps
+
+  */}}
+  {{- with .secrets }}
+  {{- range $name, $secret:= . }}
+  - name: secret-{{ $name }}
+    secret:
+      secretName: {{ $name }}
+  {{- end }}{{/* end of secrets range */}}
+  {{- end }}{{/* end of .secrets
+
+  */}}
+  {{- with .volumes }}
+  {{- range $name, $volume:= . }}
+  - name: pvc-{{ $name }}
+    persistentVolumeClaim:
+      claimName: {{ $name }}
+  {{- end }}{{/* end of volumes range */}}
+  {{- end }}{{/* end of .volumes*/}}
+  {{- end }}{{/* end of $container.mounts */}}
+{{- end }}{{/* end of container range*/}}
+{{- end }}

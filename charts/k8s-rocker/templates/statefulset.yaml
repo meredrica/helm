@@ -1,1 +1,29 @@
-#TODO
+{{/*
+statefulset:
+  name: 'statefulsetname'
+  meta:
+  replicaCount: 1
+  policy: 'OrderedReady'
+  strategy: 'RollingUpdate'
+  minReadySeconds: # minimum ready seconds
+*/}}
+{{- with .Values.statefulset }}
+{{ include "k8s-rocker.object" (list $ "apps/v1" "StatefulSet" (include "k8s-rocker.name"  $  ) .)
+}}
+spec:
+  serviceName: {{ required "statefulset.name is required" .name }}
+  selector:
+    matchLabels:
+    {{- include "k8s-rocker.matchLabels" $ | indent 6}}
+  replicas: {{ default 1 .replicas }}
+  updateStrategy:
+    type: {{ default "RollingUpdate" .strategy }}
+  podManagementPolicy: {{ default "OrderedReady" .policy }}
+  minReadySeconds: {{ default 0 .minReadySeconds }}
+  template:
+    metadata:
+      labels:
+      {{- include "k8s-rocker.matchLabels" $ | indent 8 }}
+    spec:
+    {{- include "k8s-rocker.podspec" $ | indent 6 }}
+{{- end }}

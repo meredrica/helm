@@ -1,4 +1,5 @@
 nameOverride: # defaults to .Chart.Name
+restart: "Always"
 
 meta: # added to all objects
   labels:
@@ -91,10 +92,8 @@ pod: # the main pod
       configmaps:
         'configmapname': '/configmap/path'
     raw: # passed raw into the container spec
-
 test:
   # podspec as above, used for helm test
-
 init:
   # podspec for initing the pod
   'foo':
@@ -117,8 +116,9 @@ deployment:
     targetMemory: 80
 
 statefulset:
+  name: 'statefulsetname'
   meta:
-  replicaCount: 1
+  replicas: 1
   policy: 'OrderedReady'
   strategy: 'RollingUpdate'
   minReadySeconds: # minimum ready seconds

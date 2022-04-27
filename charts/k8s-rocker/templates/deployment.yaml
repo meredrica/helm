@@ -26,47 +26,5 @@ spec:
       labels:
       {{- include "k8s-rocker.matchLabels" $ | indent 8 }}
     spec:
-      restartPolicy: {{ default "Always" $.Values.deployment.restart}}
-    {{- with $.Values.init }}
-      initContainers:
-      {{- range $name, $init := . }}
-      - {{- include "k8s-rocker.container" (list $ $name $init) | indent 10 }}
-      {{- end }}
-    {{- end }}
-
-      containers:
-        {{- range $name, $container := $.Values.pod }}
-        - {{- include "k8s-rocker.container" (list $ $name $container) | indent 10 }}
-        {{- end }}
-
-      volumes:
-        {{- range $name, $container := $.Values.pod }}
-        {{- with $container.mounts }}
-        {{- with .configmaps }}
-        {{- range $name, $configMap:= . }}
-        - name: config-{{ $name }}
-          configMap:
-            name: {{ $name }}
-        {{- end }}{{/* end of configmap range */}}
-        {{- end }}{{/* end of .configmaps
-
-        */}}
-        {{- with .secrets }}
-        {{- range $name, $secret:= . }}
-        - name: secret-{{ $name }}
-          secret:
-            secretName: {{ $name }}
-        {{- end }}{{/* end of secrets range */}}
-        {{- end }}{{/* end of .secrets
-
-        */}}
-        {{- with .volumes }}
-        {{- range $name, $volume:= . }}
-        - name: pvc-{{ $name }}
-          persistentVolumeClaim:
-            claimName: {{ $name }}
-        {{- end }}{{/* end of volumes range */}}
-        {{- end }}{{/* end of .volumes*/}}
-      {{- end }}{{/* end of $container.mounts */}}
-      {{- end }}{{/* end of container range*/}}
+		{{- include "k8s-rocker.podspec" $ | indent 6 }}
 {{- end }}
