@@ -2,7 +2,6 @@ nameOverride: # defaults to .Chart.Name
 
 meta: # added to all objects
   labels:
-    # app: is automatically added with the name of the install
     metalabel: foo
   annotations:
     metaannotation: bar
@@ -25,7 +24,7 @@ secrets:
       'key': |
          some sting value
          possibly multiline
-    binary:
+    binary: # runs base64enc on the file and mounts it
       'key2':
         file: test/secrets/file.secret
       'key3':
@@ -58,39 +57,39 @@ pod: # the main pod
       - $NAME
       - $raw-from
     ports:
-      'name':
+      'port-name':
         port: 80
         protocol: 'TCP'
     env:
       'NAME': 'SOME_ENV_VALUE'
-      'raw-from':
+      'raw-from': # passed raw
         valueFrom:
           fieldRef:
             fieldPath: metadata.name
     health:
-      live: # a probe spec
+      live: # a probe spec, passed raw
         httpGet:
           port: 80
           path: '/'
-      ready: # a probe spec
+      ready: # a probe spec, passed raw
         httpGet:
           port: 80
           path: '/ready'
-      start: # a probe spec
+      start: # a probe spec, passed raw
         httpGet:
           port: 80
           path: '/start'
     restart: 'Always' # restartPolicy
     mounts: # mounts
       volumes:
-        'name':
+        'volumename':
           path: '/some/path'
           readOnly: true
           subPath: '.something'
-
       secrets:
-      env: # TODO
+        'secretname': '/secret/path'
       configmaps:
+        'configmapname': '/configmap/path'
     raw: # passed raw into the container spec
 
 test:

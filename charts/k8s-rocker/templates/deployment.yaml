@@ -42,12 +42,30 @@ spec:
       volumes:
         {{- range $name, $container := $.Values.pod }}
         {{- with $container.mounts }}
-          {{- with .volumes }}
-          {{- range $name, $volume:= . }}
-            - name: {{ $name }}
-              persistentVolumeClaim:
-                claimName: {{ $name }}
-          {{- end }} {{/* end of volumes range */}}
+        {{- with .configmaps }}
+        {{- range $name, $configMap:= . }}
+        - name: config-{{ $name }}
+          configMap:
+            name: {{ $name }}
+        {{- end }}{{/* end of configmap range */}}
+        {{- end }}{{/* end of .configmaps
+
+        */}}
+        {{- with .secrets }}
+        {{- range $name, $secret:= . }}
+        - name: secret-{{ $name }}
+          secret:
+            secretName: {{ $name }}
+        {{- end }}{{/* end of secrets range */}}
+        {{- end }}{{/* end of .secrets
+
+        */}}
+        {{- with .volumes }}
+        {{- range $name, $volume:= . }}
+        - name: pvc-{{ $name }}
+          persistentVolumeClaim:
+            claimName: {{ $name }}
+        {{- end }}{{/* end of volumes range */}}
         {{- end }}{{/* end of .volumes*/}}
       {{- end }}{{/* end of $container.mounts */}}
       {{- end }}{{/* end of container range*/}}

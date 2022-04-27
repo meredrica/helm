@@ -48,7 +48,6 @@
         subPath: '.something'
     secrets:
       'secretname': '/secret/path'
-    env: # TODO
     configmaps:
       'configmapname': '/configmap/path'
   raw: # passed raw into the container spec
@@ -145,9 +144,25 @@ resources:
 */}}
 {{- with $container.mounts }}
 volumeMounts:
+{{- with .configmaps }}
+{{- range $name, $path:= . }}
+  - name: config-{{ $name }}
+    mountPath: {{ $path }}
+{{- end }} {{/* end of configmap range */}}
+{{- end }} {{/* end of configmaps
+
+*/}}
+{{- with .secrets }}
+{{- range $name, $path:= . }}
+  - name: secret-{{ $name }}
+    mountPath: {{ $path }}
+{{- end }} {{/* end of secrets range */}}
+{{- end }} {{/* end of secrets
+
+*/}}
 {{- with .volumes }}
 {{- range $name, $volume:= .}}
-  - name: {{ $name }}
+  - name: pvc-{{ $name }}
     mountPath: {{ required "volume.path is required" $volume.path }}
     {{- with $volume.readOnly }}
     readOnly: {{ . }}
@@ -156,7 +171,6 @@ volumeMounts:
     subPath: {{ . }}
     {{- end }}
 {{- end }} {{/* end of volumes range */}}
-# TODO: add the other mounts here
 {{- end }} {{/* end of volumeMounts */}}
 {{- end }}{{/* end of $container.mounts */}}
 {{- /*
