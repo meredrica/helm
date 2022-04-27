@@ -19,7 +19,7 @@ metadata:
 {{- $meta = (deepCopy $meta | merge $in.meta )}}
 {{- end }}
   labels:
-    {{- include "k8s-rocker.matchLabels" (list $) | indent 4 }}
+    {{- include "k8s-rocker.matchLabels" $ | indent 4 }}
     {{- range $key, $value := $meta.labels }}
     {{ $key | quote }}: {{ $value | quote }}
     {{- end }} {{/* end of labels*/}}
@@ -33,7 +33,7 @@ metadata:
 Selector labels
 */}}
 {{- define "k8s-rocker.matchLabels" -}}
-{{- $ := index . 0 }}
+{{- $ := .  }}
 app.kubernetes.io/name: {{ include "k8s-rocker.name" $ }}
 app.kubernetes.io/instance: {{ $.Release.Name }}
 {{- end }}

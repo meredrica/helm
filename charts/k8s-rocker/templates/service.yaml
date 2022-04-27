@@ -14,5 +14,5 @@ spec:
     - port: {{ .port }}
       targetPort: {{ default .port .target }}
   selector:
-    {{- include "k8s-rocker.matchLabels" (list $) | indent 6 }}
+    {{- include "k8s-rocker.matchLabels" $ | indent 6 }}
 {{- end}}{{/** end of .Values.service **/}}

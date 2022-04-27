@@ -17,14 +17,14 @@ deployment:
 spec:
   selector:
     matchLabels:
-    {{- include "k8s-rocker.matchLabels" (list $) | indent 6}}
+    {{- include "k8s-rocker.matchLabels" $ | indent 6}}
   minReadySeconds: {{ default 0 .minReadySeconds }}
   strategy:
     type: {{ default "RollingUpdate" .strategy }}
   template:
     metadata:
       labels:
-      {{- include "k8s-rocker.matchLabels" (list $) | indent 8 }}
+      {{- include "k8s-rocker.matchLabels" $ | indent 8 }}
     spec:
       restartPolicy: {{ default "Always" $.Values.deployment.restart}}
     {{- with $.Values.init }}
