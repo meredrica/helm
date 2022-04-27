@@ -11,9 +11,12 @@ apiVersion: {{ $api }}
 kind: {{$kind}}
 metadata:
   name: {{ $name | trunc 63 | trimSuffix "-" }}
+{{- $meta:= dict }}
+{{- if $.Values.meta }}
 {{- $meta := $.Values.meta }}
+{{- end}}
 {{- if $in.meta }}
-{{- $meta = (deepCopy $.Values.meta | merge $in.meta )}}
+{{- $meta = (deepCopy $meta | merge $in.meta )}}
 {{- end }}
   labels:
     {{- include "k8s-rocker.matchLabels" (list $) | indent 4 }}
