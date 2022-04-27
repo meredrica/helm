@@ -9,7 +9,8 @@ deployment:
     targetCPU: 80
     targetMemory: 80
 */}}
-{{- with .Values.deployment.autoscaling }}
+{{- with .Values.deployment}}
+{{- with .autoscaling }}
 {{- include "k8s-rocker.object" (list $ "autoscaling/v2beta2" "HorizontalPodAutoscaler" (include "k8s-rocker.name" $ ) . ) }}
 spec:
   scaleTargetRef:
@@ -35,4 +36,5 @@ spec:
           type: 'Utilization'
           averageUtilization: {{ . }}
     {{- end }}
-{{- end }}{{/** end of .Values.deployment.autoscaling **/}}
+{{- end }}{{/* end of .autoscaling */}}
+{{- end }}{{/* end of .Values.deployment */}}
