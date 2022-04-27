@@ -1,32 +1,57 @@
 {{- define "k8s-rocker.container" }}
 {{- /*
-containers:
-  'name':
-    image:
-    tag:
-    policy: 'IfNotPresent'
-    memory:
-      min: 100Mi
-      max: 110Mi
-    command: # startup command
-    args: # startup args
-    ports:
-      'name':
-        port:
-        target:
-        protocol: 'TCP'
-    env:
-      'name': # if raw is specified, mount valuefrom etc
-        raw: {}
-    health: # healthchecks
-    mounts: # mounts
-      volumes:
-        'name':
-          path:
-      secrets:
-      env: # TODO
-      configmaps:
-    affinity: # passed raw into the affinity block
+'name':
+  image: nginx
+  tag: latest
+  policy: 'IfNotPresent' # imagePullPolicy
+  cpu:
+    min: 100m
+    max: 200m
+  memory:
+    min: 100Mi
+    max: 110Mi
+
+  command: # startup command
+    - echo
+  args: # startup args
+    - $NAME
+    - $raw-from
+  ports:
+    'port-name':
+      port: 80
+      protocol: 'TCP'
+  env:
+    'NAME': 'SOME_ENV_VALUE'
+    'raw-from': # passed raw
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+  health:
+    live: # a probe spec, passed raw
+      httpGet:
+        port: 80
+        path: '/'
+    ready: # a probe spec, passed raw
+      httpGet:
+        port: 80
+        path: '/ready'
+    start: # a probe spec, passed raw
+      httpGet:
+        port: 80
+        path: '/start'
+  restart: 'Always' # restartPolicy
+  mounts: # mounts
+    volumes:
+      'volumename':
+        path: '/some/path'
+        readOnly: true
+        subPath: '.something'
+    secrets:
+      'secretname': '/secret/path'
+    env: # TODO
+    configmaps:
+      'configmapname': '/configmap/path'
+  raw: # passed raw into the container spec
 */}}
 {{- $ := index . 0 }}
 {{- $name:= index . 1 }}
