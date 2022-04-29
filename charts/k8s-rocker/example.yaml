@@ -138,6 +138,6 @@ ingress:
     hosts:
       'host.of.app':
           '/':
-            type: 'ImplementationSpecific'
+            type: 'Prefix'
             to: 'servicename'
             port: 8080

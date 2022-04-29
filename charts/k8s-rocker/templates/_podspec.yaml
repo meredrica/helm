@@ -6,12 +6,12 @@ restartPolicy: {{ default "Always" $.restart}}
 {{- $containers = merge $containers (deepCopy .) }}
 initContainers:
 {{- range $name, $init := . }}
-- {{- include "k8s-rocker.container" (list $ $name $init) | indent 10 }}
+- {{- include "k8s-rocker.container" (list $ $name $init) | indent 4 }}
 {{- end }}
 {{- end }}
 containers:
 {{- range $name, $container := $.Values.pod }}
-  - {{- include "k8s-rocker.container" (list $ $name $container) | indent 10 }}
+  - {{- include "k8s-rocker.container" (list $ $name $container) | indent 4 }}
 {{- end }}
 volumes:
 {{- range $name, $container := $containers }}

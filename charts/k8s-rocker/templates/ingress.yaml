@@ -24,7 +24,7 @@ spec:
         paths:
           {{- range $name, $path:= $rule }}
           - path: {{ $name }}
-            pathType: {{ default "ImplementationSpecific" $path.pathType }}
+            pathType: {{ default "Prefix" $path.pathType }}
             backend:
               service:
                 name: {{ $path.to }}
