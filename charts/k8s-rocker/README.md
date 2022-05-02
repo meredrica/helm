@@ -22,4 +22,4 @@ It's kubernetes native only (no openshift dependencies)
 - [Stateful Sets](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/)
 
 # How To
-See the [example](example.yaml) file
+See the [example](example.yaml) file.
