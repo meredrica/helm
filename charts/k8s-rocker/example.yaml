@@ -93,8 +93,6 @@ pod: # the main pod
       configmaps:
         'configmapname': '/configmap/path'
     raw: # passed raw into the container spec
-test:
-  # podspec as above, used for helm test
 init:
   # podspec for initing the pod
   'foo':
@@ -102,6 +100,8 @@ init:
     tag: # defaults to latest
     command:
       - true
+test:
+  # podspec as above, used for helm test
 
 deployment:
   meta:
