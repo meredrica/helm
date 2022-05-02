@@ -31,11 +31,11 @@
       httpGet:
         port: 80
         path: '/'
-    ready: # a probe spec, passed raw
+    ready: # a probe spec, passed raw. defaults to live
       httpGet:
         port: 80
         path: '/ready'
-    start: # a probe spec, passed raw
+    start: # a probe spec, passed raw. defaults to live
       httpGet:
         port: 80
         path: '/start'
@@ -109,11 +109,15 @@ env:
 {{- with .live }}
 livenessProbe: {{ . | toYaml | nindent 2 }}
 {{- end }}
-{{- with .ready }}
-readinessProbe: {{ . | toYaml | nindent 2 }}
+{{- if .ready }}
+readinessProbe: {{ .ready | toYaml | nindent 2 }}
+{{- else if .live }}
+readinessProbe: {{ .live | toYaml | nindent 2 }}
 {{- end }}
-{{- with .start }}
-startupProbe: {{ . | toYaml | nindent 2 }}
+{{- if .start }}
+startupProbe: {{ .start | toYaml | nindent 2 }}
+{{- else if .live }}
+startupProbe: {{ .live | toYaml | nindent 2 }}
 {{- end }}
 {{- end }}{{/* end of $container.health */}}
 {{- /*
