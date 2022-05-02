@@ -44,7 +44,7 @@ configmaps:
 pod: # the main pod
   'web':
     image: nginx
-    tag: latest
+    tag: # defaults to latest
     policy: 'IfNotPresent' # imagePullPolicy
     cpu:
       min: 100m
@@ -99,7 +99,7 @@ init:
   # podspec for initing the pod
   'foo':
     image: busybox
-    tag: latest
+    tag: # defaults to latest
     command:
       - true
 

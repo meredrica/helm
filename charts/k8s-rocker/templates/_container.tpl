@@ -56,7 +56,7 @@
 {{- $name:= index . 1 }}
 {{- $container:= index . 2 }}
 name: {{ $name }}
-image: {{ required "container.image is required" $container.image }}:{{ required "container.tag is required" $container.tag }}
+image: {{ required "container.image is required" $container.image }}:{{ default "latest" $container.tag }}
 imagePullPolicy: {{ default "IfNotPresent" $container.policy }}
 {{- /*
 
