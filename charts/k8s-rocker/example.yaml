@@ -1,0 +1,144 @@
+nameOverride: # defaults to .Chart.Name
+restart: "Always"
+version: # defaults to .Chart.Version
+
+meta: # added to all objects
+  labels:
+    metalabel: foo
+  annotations:
+    metaannotation: bar
+
+volumeClaims:
+  'name':
+    meta:
+      annotations:
+        bar: baz
+        vol: 1
+    mode: 'ReadWriteOnce'
+    storage: '500Mi'
+
+secrets:
+  'name':
+    meta:
+      annotations:
+        bar: baz
+    strings:
+      'key': |
+         some sting value
+         possibly multiline
+    binary: # runs base64enc on the file and mounts it
+      'key2':
+        file: test/secrets/file.secret
+      'key3':
+        file: test/secrets/image.jpg
+
+configmaps:
+  'name':
+    meta:
+      annotations:
+        bar: baz
+    data:
+      'key': value
+      'key2': value2
+
+pod: # the main pod
+  'web':
+    image: nginx
+    tag: # defaults to latest
+    policy: 'IfNotPresent' # imagePullPolicy
+    cpu:
+      min: 100m
+      max: 200m
+    memory:
+      min: 100Mi
+      max: 110Mi
+
+    command: # startup command
+      - echo
+    args: # startup args
+      - $NAME
+      - $raw-from
+    ports:
+      'port-name':
+        port: 80
+        protocol: 'TCP'
+    env:
+      'NAME': 'SOME_ENV_VALUE'
+      'raw-from': # passed raw
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+    health:
+      live: # a probe spec, passed raw
+        httpGet:
+          port: 80
+          path: '/'
+      ready: # a probe spec, passed raw. defaults to live
+        httpGet:
+          port: 80
+          path: '/ready'
+      start: # a probe spec, passed raw. defaults to live
+        httpGet:
+          port: 80
+          path: '/start'
+    restart: 'Always' # restartPolicy
+    mounts: # mounts
+      volumes:
+        'volumename':
+          path: '/some/path'
+          readOnly: true
+          subPath: '.something'
+      secrets:
+        'secretname': '/secret/path'
+      configmaps:
+        'configmapname': '/configmap/path'
+    raw: # passed raw into the container spec
+init:
+  # podspec for initing the pod
+  'foo':
+    image: busybox
+    tag: # defaults to latest
+    command:
+      - true
+test:
+  # podspec as above, used for helm test
+
+deployment:
+  meta:
+  strategy: 'RollingUpdate' # default is rolling
+  minReadySeconds: 0 # minimum ready seconds
+  autoscaling:
+    meta:
+      annotations:
+        "some": "scaler"
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPU: 80
+    targetMemory: 80
+
+statefulset:
+  name: 'statefulsetname'
+  meta:
+  replicas: 1
+  policy: 'OrderedReady'
+  strategy: 'RollingUpdate'
+  minReadySeconds: # minimum ready seconds
+
+service:
+  name: 'servicename'
+  type: 'ClusterIP'
+  port: 80
+  target: 80 # defaults to port
+  meta: # additional metadata
+    labels:
+      foo: bar
+
+ingress:
+  'name':
+    meta:
+    hosts:
+      'host.of.app':
+          '/':
+            type: 'Prefix'
+            to: 'servicename'
+            port: 8080

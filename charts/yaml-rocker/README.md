@@ -1,3 +1,6 @@
+# Deprecation warning
+You should use [k8s-rocker](../k8s-rocker) as it's kubernetes native and has many more features.
+
 # YAML Rocker
 Because Openshift is extremely complicated.
 

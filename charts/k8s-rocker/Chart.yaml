@@ -1,0 +1,4 @@
+apiVersion: v2
+name: k8s-rocker
+version: 0.0.1
+description: A general purpose kubernetes chart

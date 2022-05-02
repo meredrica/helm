@@ -1,0 +1,40 @@
+{{/*
+deployment:
+  autoscaling:
+    meta:
+      annotations:
+        "some": "scaler"
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPU: 80
+    targetMemory: 80
+*/}}
+{{- with .Values.deployment}}
+{{- with .autoscaling }}
+{{- include "k8s-rocker.object" (list $ "autoscaling/v2beta2" "HorizontalPodAutoscaler" (include "k8s-rocker.name" $ ) . ) }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "k8s-rocker.name" $ }}
+  minReplicas: {{ .minReplicas }}
+  maxReplicas: {{ .maxReplicas }}
+  metrics:
+    {{- with .targetCPU}}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: 'Utilization'
+          averageUtilization: {{ . }}
+    {{- end }}
+    {{- with .targetMemory }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: 'Utilization'
+          averageUtilization: {{ . }}
+    {{- end }}
+{{- end }}{{/* end of .autoscaling */}}
+{{- end }}{{/* end of .Values.deployment */}}

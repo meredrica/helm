@@ -1,0 +1,15 @@
+{{- with .Values.test }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "k8s-rocker.name" $ }}-test
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+{{- range $name, $container := $.Values.test }}
+    - {{- include "k8s-rocker.container" (list $ $name $container) | indent 6 }}
+{{- end }}
+  restartPolicy: Never
+
+{{- end }}

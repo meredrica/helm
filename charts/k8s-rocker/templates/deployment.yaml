@@ -1,0 +1,30 @@
+{{/*
+deployment:
+  meta:
+  strategy: # default is rolling
+  minReadySeconds: # minimum ready seconds
+  autoscaling:
+    meta:
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPU: 80
+    targetMemory: 80
+
+*/}}
+{{- with .Values.deployment }}
+{{ include "k8s-rocker.object" (list $ "apps/v1" "Deployment" (include "k8s-rocker.name"  $  ) .)
+}}
+spec:
+  selector:
+    matchLabels:
+    {{- include "k8s-rocker.matchLabels" $ | indent 6}}
+  minReadySeconds: {{ default 0 .minReadySeconds }}
+  strategy:
+    type: {{ default "RollingUpdate" .strategy }}
+  template:
+    metadata:
+      labels:
+      {{- include "k8s-rocker.matchLabels" $ | indent 8 }}
+    spec:
+		{{- include "k8s-rocker.podspec" $ | indent 6 }}
+{{- end }}
