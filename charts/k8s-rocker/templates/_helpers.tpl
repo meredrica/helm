@@ -20,6 +20,7 @@ metadata:
 {{- end }}
   labels:
     {{- include "k8s-rocker.matchLabels" $ | indent 4 }}
+    app.kubernetes.io/version: {{ default $.Chart.Version $.Values.version }}
     {{- range $key, $value := $meta.labels }}
     {{ $key | quote }}: {{ $value | quote }}
     {{- end }} {{/* end of labels*/}}
@@ -28,8 +29,8 @@ metadata:
     {{ $key | quote }}: {{ $value | quote }}
     {{- end }} {{/* end of annotations*/}}
 {{- end }}  {{/* end of k8s-rocker.object }}
-
 {{/*
+
 Selector labels
 */}}
 {{- define "k8s-rocker.matchLabels" -}}
@@ -37,8 +38,8 @@ Selector labels
 app.kubernetes.io/name: {{ include "k8s-rocker.name" $ }}
 app.kubernetes.io/instance: {{ $.Release.Name }}
 {{- end }}
-
 {{/*
+
 Expand the name of the chart.
 */}}
 {{- define "k8s-rocker.name" -}}

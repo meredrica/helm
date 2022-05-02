@@ -1,5 +1,6 @@
 nameOverride: # defaults to .Chart.Name
 restart: "Always"
+version: # defaults to .Chart.Version
 
 meta: # added to all objects
   labels:
