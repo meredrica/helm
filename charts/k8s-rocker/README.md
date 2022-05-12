@@ -18,7 +18,7 @@ It's kubernetes native only (no openshift dependencies)
 - [Secrets](https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/secret-v1/)
 - [Ingress](https://kubernetes.io/docs/reference/kubernetes-api/service-resources/ingress-v1/)
 - [Service](https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/)
-- [Deployments](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/) with optional [Horizontal Pod Autoscaling](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/horizontal-pod-autoscaler-v3beta2/Uses) `v2beta2`.
+- [Deployments](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/) with optional [Horizontal Pod Autoscaling](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/horizontal-pod-autoscaler-v2beta2/) `v2beta2`.
 - [Stateful Sets](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/)
 
 # How To
