@@ -64,12 +64,12 @@ pod: # the main pod
         protocol: 'TCP'
     env:
       'NAME': 'SOME_ENV_VALUE'
-      'raw-from': # passed raw
+      'raw-from': # passed raw. see https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
         valueFrom:
           fieldRef:
             fieldPath: metadata.name
     health:
-      live: # a probe spec, passed raw
+      live: # a probe spec, passed raw. see https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
         httpGet:
           port: 80
           path: '/'
