@@ -1,3 +1,6 @@
+{{- /* vim: filetype=go
+Defines a podspec
+*/}}
 {{- define "k8s-rocker.podspec" }}
 {{- $ := . }}
 restartPolicy: {{ default "Always" $.restart}}

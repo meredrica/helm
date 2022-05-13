@@ -1,4 +1,4 @@
-{{/*
+{{/* vim: filetype=go
 deployment:
   autoscaling:
     meta:
