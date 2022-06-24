@@ -40,6 +40,11 @@ configmaps:
     data:
       'key': value
       'key2': value2
+    binary:
+      'key3':
+        file: test/configMap/test.yml
+      'key4':
+        file: test/configMap/img.png
 
 pod: # the main pod
   'web':

@@ -13,9 +13,9 @@ data:
   {{- range $key, $value:= $configmap.data}}
   {{ $key }}: {{ $value }}
   {{- end }}
-filedData:
+binaryData:
   {{- range $key, $value:= $configmap.binary}}
-  {{ $key }}: |-{{ b64enc ($.Files.Get $value.file) }}
+  {{ $key }}: |-{{ $.Files.Get $value.file }}
   {{- end }}
 
 ---
