@@ -13,6 +13,11 @@ data:
   {{- range $key, $value:= $configmap.data}}
   {{ $key }}: {{ $value }}
   {{- end }}
+filedData:
+  {{- range $key, $value:= $configmap.binary}}
+  {{ $key }}: |-{{ b64enc ($.Files.Get $value.file) }}
+  {{- end }}
+
 ---
 {{- end }}{{/** end of range */}}
 {{- end }}{{/** end of .Values.configmaps*/}}
