@@ -15,7 +15,7 @@ data:
   {{- end }}
 binaryData:
   {{- range $key, $value:= $configmap.binary}}
-  {{ $key }}: |-{{ $.Files.Get $value.file }}
+  {{ $key }}: |-{{ $.Files.Get $value.file | nindent 4 }}
   {{- end }}
 
 ---
