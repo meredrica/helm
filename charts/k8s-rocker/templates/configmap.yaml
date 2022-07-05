@@ -12,7 +12,7 @@ configmaps:
 {{- include "k8s-rocker.object" (list $ "v1" "ConfigMap" $name $configmap) }}
 data:
   {{- range $key, $value:= $configmap.data}}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: |- {{ $value | nindent 4 }}
   {{- end }}
 ---
 {{- end }}{{/** end of range */}}
