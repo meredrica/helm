@@ -124,14 +124,22 @@ statefulset:
   strategy: 'RollingUpdate'
   minReadySeconds: # minimum ready seconds
 
-service:
-  name: 'servicename'
-  type: 'ClusterIP'
-  port: 80
-  target: 80 # defaults to port
-  meta: # additional metadata
-    labels:
-      foo: bar
+services:
+  'someservice':
+    type: 'clusterip'
+    ports:
+      'name':
+        port: 80
+        target: 80 # defaults to port
+        protocol: 'tcp'
+      'port2':
+        port: 80
+        target: 80 # defaults to port
+        protocol: 'tcp'
+    meta: # additional metadata
+      labels:
+        foo: bar
+
 
 ingress:
   'name':
