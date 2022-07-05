@@ -126,7 +126,7 @@ statefulset:
 
 services:
   'someservice':
-    type: 'clusterip'
+    type: 'ClusterIP'
     ports:
       'name':
         port: 80
