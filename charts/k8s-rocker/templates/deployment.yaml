@@ -1,4 +1,4 @@
-{{/*
+{{/* vim: filetype=go
 deployment:
   meta:
   strategy: # default is rolling
@@ -26,5 +26,5 @@ spec:
       labels:
       {{- include "k8s-rocker.matchLabels" $ | indent 8 }}
     spec:
-		{{- include "k8s-rocker.podspec" $ | indent 6 }}
+      {{- include "k8s-rocker.podspec" $ | indent 6 }}
 {{- end }}

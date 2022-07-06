@@ -1,4 +1,4 @@
-{{/*
+{{/* vim: filetype=go
 Define a top level object
 */}}
 {{- define "k8s-rocker.object" }}

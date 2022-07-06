@@ -1,3 +1,6 @@
+{{- /* vim: filetype=go
+Define a container that can be reused
+*/}}
 {{- define "k8s-rocker.container" }}
 {{- /*
 'name':

@@ -1,5 +1,11 @@
+{{- /* vim: filetype=go
+Defines a podspec
+*/}}
 {{- define "k8s-rocker.podspec" }}
 {{- $ := . }}
+{{- $configmaps := dict }}
+{{- $secrets := dict }}
+{{- $volumes := dict }}
 restartPolicy: {{ default "Always" $.restart}}
 {{- $containers:= (deepCopy $.Values.pod )}}
 {{- with $.Values.init }}
@@ -13,34 +19,40 @@ containers:
 {{- range $name, $container := $.Values.pod }}
   - {{- include "k8s-rocker.container" (list $ $name $container) | indent 4 }}
 {{- end }}
-volumes:
 {{- range $name, $container := $containers }}
-  {{- with $container.mounts }}
-  {{- with .configmaps }}
-  {{- range $name, $configMap:= . }}
+{{- /* merge all configmaps
+*/}}
+{{- with $container.mounts }}
+{{- with .configmaps }}
+{{- $configmaps = (merge . $configmaps) }}
+{{- end }}{{- /* end of $container.configmaps*/}}
+{{- /* merge all secrets
+*/}}
+{{- with .secrets }}
+{{- $secrets = (merge . $secrets) }}
+{{- end }}{{- /* end of $container.secrets*/}}
+{{- /* merge all volumes
+*/}}
+{{- with .volumes }}
+{{- $volumes = (merge . $volumes) }}
+{{- end }}{{- /* end of $container.volumes*/}}
+{{- end }}{{- /* end of $container.mounts */}}
+{{- end }}{{- /* end of container range
+*/}}
+volumes:
+  {{- range $name, $configMap:= $configmaps }}
   - name: config-{{ $name }}
     configMap:
       name: {{ $name }}
-  {{- end }}{{/* end of configmap range */}}
-  {{- end }}{{/* end of .configmaps
-
-  */}}
-  {{- with .secrets }}
-  {{- range $name, $secret:= . }}
+  {{- end }}{{- /* end of configmaps */}}
+  {{- range $name, $secret:= $secrets }}
   - name: secret-{{ $name }}
     secret:
       secretName: {{ $name }}
-  {{- end }}{{/* end of secrets range */}}
-  {{- end }}{{/* end of .secrets
-
-  */}}
-  {{- with .volumes }}
-  {{- range $name, $volume:= . }}
+  {{- end }}{{- /* end of secrets */}}
+  {{- range $name, $volume:= $volumes }}
   - name: pvc-{{ $name }}
     persistentVolumeClaim:
       claimName: {{ $name }}
-  {{- end }}{{/* end of volumes range */}}
-  {{- end }}{{/* end of .volumes*/}}
-  {{- end }}{{/* end of $container.mounts */}}
-{{- end }}{{/* end of container range*/}}
-{{- end }}
+  {{- end }}{{- /* end of volumes range */}}
+{{- end }}{{- /* end of define */}}
