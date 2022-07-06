@@ -41,7 +41,7 @@ configmaps:
       'key2': value2
     files:
       'key3': test/configMap/test.yml
-      'IMAGE': test/configMap/img.png
+      'key4': test/configMap/img.png
 
 pod: # the main pod
   'web':
