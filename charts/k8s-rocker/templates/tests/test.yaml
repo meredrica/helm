@@ -1,3 +1,5 @@
+{{- /* vim: filetype=go
+*/}}
 {{- with .Values.test }}
 apiVersion: v1
 kind: Pod
@@ -11,5 +13,4 @@ spec:
     - {{- include "k8s-rocker.container" (list $ $name $container) | indent 6 }}
 {{- end }}
   restartPolicy: Never
-
 {{- end }}

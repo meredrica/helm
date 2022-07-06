@@ -1,3 +1,6 @@
+{{- /* vim: filetype=go
+Define a container that can be reused
+*/}}
 {{- define "k8s-rocker.container" }}
 {{- /*
 'name':
@@ -98,7 +101,7 @@ env:
   {{- else }}
   - name: {{ $name}}
     value: {{ required "env value is required" $env }}
-  {{- end }} {{/* end of kindIs */}}
+  {{- end }}{{- /* end of kindIs */}}
   {{- end }}
 {{- end }}
 {{- /*
@@ -119,7 +122,7 @@ startupProbe: {{ .start | toYaml | nindent 2 }}
 {{- else if .live }}
 startupProbe: {{ .live | toYaml | nindent 2 }}
 {{- end }}
-{{- end }}{{/* end of $container.health */}}
+{{- end }}{{- /* end of $container.health */}}
 {{- /*
 
 ---- resources
@@ -140,7 +143,7 @@ resources:
   {{- with $container.cpu }}
     cpu: {{ .min}}
   {{- end }}
-{{- end }} {{/* end of $container.cpu || $container.memory */}}
+{{- end }}{{- /* end of $container.cpu || $container.memory */}}
 
 {{- /*
 
@@ -152,16 +155,16 @@ volumeMounts:
 {{- range $name, $path:= . }}
   - name: config-{{ $name }}
     mountPath: {{ $path }}
-{{- end }} {{/* end of configmap range */}}
-{{- end }} {{/* end of configmaps
+{{- end }}{{- /* end of configmap range */}}
+{{- end }}{{- /* end of configmaps
 
 */}}
 {{- with .secrets }}
 {{- range $name, $path:= . }}
   - name: secret-{{ $name }}
     mountPath: {{ $path }}
-{{- end }} {{/* end of secrets range */}}
-{{- end }} {{/* end of secrets
+{{- end }}{{- /* end of secrets range */}}
+{{- end }}{{- /* end of secrets
 
 */}}
 {{- with .volumes }}
@@ -174,14 +177,14 @@ volumeMounts:
     {{- with $volume.subPath }}
     subPath: {{ . }}
     {{- end }}
-{{- end }} {{/* end of volumes range */}}
-{{- end }} {{/* end of volumeMounts */}}
-{{- end }}{{/* end of $container.mounts */}}
+{{- end }}{{- /* end of volumes range */}}
+{{- end }}{{- /* end of volumeMounts */}}
+{{- end }}{{- /* end of $container.mounts */}}
 {{- /*
 
 ---- raw block
 */}}
 {{- with $container.raw }}
 {{ . | toYaml | nindent 2 }}
-{{- end }}{{/* end of raw */}}
-{{- end }}{{/* end of k8s-rocker.container */}}
+{{- end }}{{- /* end of raw */}}
+{{- end }}{{- /* end of k8s-rocker.container */}}

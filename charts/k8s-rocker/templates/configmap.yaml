@@ -1,4 +1,5 @@
-{{/*
+{{- /* vim: filetype=go
+
 configmaps:
   'name':
     meta:
@@ -11,8 +12,12 @@ configmaps:
 {{- include "k8s-rocker.object" (list $ "v1" "ConfigMap" $name $configmap) }}
 data:
   {{- range $key, $value:= $configmap.data}}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: |- {{ $value | nindent 4 }}
+  {{- end }}
+binaryData:
+  {{- range $key, $value:= $configmap.files}}
+  {{ $key }}: |-{{ b64enc ($.Files.Get $value) | nindent 4 }}
   {{- end }}
 ---
-{{- end }}{{/** end of range */}}
-{{- end }}{{/** end of .Values.configmaps*/}}
+{{- end }}{{- /* end of range */}}
+{{- end }}{{- /* end of .Values.configmaps*/}}

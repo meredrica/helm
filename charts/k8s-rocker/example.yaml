@@ -19,6 +19,7 @@ volumeClaims:
 
 secrets:
   'name':
+    immutable: false
     meta:
       annotations:
         bar: baz
@@ -26,11 +27,9 @@ secrets:
       'key': |
          some sting value
          possibly multiline
-    binary: # runs base64enc on the file and mounts it
-      'key2':
-        file: test/secrets/file.secret
-      'key3':
-        file: test/secrets/image.jpg
+    files:
+      'key2': test/secrets/file.secret
+      'key3': test/secrets/image.jpg
 
 configmaps:
   'name':
@@ -40,6 +39,9 @@ configmaps:
     data:
       'key': value
       'key2': value2
+    files:
+      'key3': test/configMap/test.yml
+      'key4': test/configMap/img.png
 
 pod: # the main pod
   'web':
@@ -64,12 +66,12 @@ pod: # the main pod
         protocol: 'TCP'
     env:
       'NAME': 'SOME_ENV_VALUE'
-      'raw-from': # passed raw
+      'raw-from': # passed raw. see https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
         valueFrom:
           fieldRef:
             fieldPath: metadata.name
     health:
-      live: # a probe spec, passed raw
+      live: # a probe spec, passed raw. see https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
         httpGet:
           port: 80
           path: '/'
@@ -111,10 +113,10 @@ deployment:
     meta:
       annotations:
         "some": "scaler"
-    minReplicas: 1
-    maxReplicas: 10
-    targetCPU: 80
-    targetMemory: 80
+    minReplicas: 1 # default is 1
+    maxReplicas: 10 # no default
+    targetCPU: 80 # default is 80
+    targetMemory: 80 # default is 80
 
 statefulset:
   name: 'statefulsetname'
@@ -124,14 +126,22 @@ statefulset:
   strategy: 'RollingUpdate'
   minReadySeconds: # minimum ready seconds
 
-service:
-  name: 'servicename'
-  type: 'ClusterIP'
-  port: 80
-  target: 80 # defaults to port
-  meta: # additional metadata
-    labels:
-      foo: bar
+services:
+  'someservice':
+    type: 'ClusterIP'
+    ports:
+      'name':
+        port: 80
+        target: 80 # defaults to port
+        protocol: 'tcp'
+      'port2':
+        port: 80
+        target: 80 # defaults to port
+        protocol: 'tcp'
+    meta: # additional metadata
+      labels:
+        foo: bar
+
 
 ingress:
   'name':
