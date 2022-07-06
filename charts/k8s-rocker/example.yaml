@@ -27,11 +27,9 @@ secrets:
       'key': |
          some sting value
          possibly multiline
-    binary: # runs base64enc on the file and mounts it
-      'key2':
-        file: test/secrets/file.secret
-      'key3':
-        file: test/secrets/image.jpg
+    files:
+      'key2': test/secrets/file.secret
+      'key3': test/secrets/image.jpg
 
 configmaps:
   'name':
@@ -41,6 +39,9 @@ configmaps:
     data:
       'key': value
       'key2': value2
+    files:
+      'key3': test/configMap/test.yml
+      'key4': test/configMap/img.png
 
 pod: # the main pod
   'web':

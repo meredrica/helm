@@ -1,6 +1,6 @@
-{{/**
+{{- /* vim:filetype=go
 DEPRECATED, use the services array
-**/}}
+*/}}
 {{- with .Values.service }}
 {{- include "k8s-rocker.object" (list $ "v1" "Service" .name .) }}
 spec:
@@ -10,22 +10,22 @@ spec:
       targetPort: {{ default .port .target }}
   selector:
     {{- include "k8s-rocker.matchLabels" $ | indent 6 }}
-{{- end}}{{/** end of .Values.service **/}}
+{{- end}}{{- /* end of .Values.service */}}
 ---
-{{/** vim:filetype=go
+{{- /* vim:filetype=go
 services:
-	'name':
-		type: 'ClusterIp'
-		port: 80
-		target: 80 # defaults to port
-		ports:
-			'name':
-				type: 'ClusterIp'
-				port: 80
-				target: 80 # defaults to port
-				protocol: 'TCP'
-		meta:
-**/}}
+  'name':
+    type: 'ClusterIp'
+    port: 80
+    target: 80 # defaults to port
+    ports:
+      'name':
+        type: 'ClusterIp'
+        port: 80
+        target: 80 # defaults to port
+        protocol: 'TCP'
+    meta:
+*/}}
 {{- with .Values.services }}
 {{- range $key, $service := . }}
 {{- include "k8s-rocker.object" (list $ "v1" "Service" $key $service) }}
@@ -42,5 +42,5 @@ spec:
   {{- end }}
   selector:
     {{- include "k8s-rocker.matchLabels" $ | indent 6 }}
-{{- end}}{{/** end of service**/}}
-{{- end}}{{/** end of .values.services**/}}
+{{- end}}{{- /* end of service */}}
+{{- end}}{{- /* end of .values.services */}}
