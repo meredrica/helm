@@ -1,4 +1,4 @@
-{{/* vim: filetype=go
+{{- /* vim: filetype=go
 deployment:
   meta:
   strategy: # default is rolling

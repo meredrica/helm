@@ -1,4 +1,4 @@
-{{/* vim: filetype=go
+{{- /* vim: filetype=go
 
 configmaps:
   'name':
@@ -18,7 +18,6 @@ binaryData:
   {{- range $key, $value:= $configmap.files}}
   {{ $key }}: |-{{ b64enc ($.Files.Get $value) | nindent 4 }}
   {{- end }}
-
 ---
-{{- end }}{{/** end of range */}}
-{{- end }}{{/** end of .Values.configmaps*/}}
+{{- end }}{{- /* end of range */}}
+{{- end }}{{- /* end of .Values.configmaps*/}}

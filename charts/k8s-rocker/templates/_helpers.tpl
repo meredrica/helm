@@ -1,4 +1,4 @@
-{{/* vim: filetype=go
+{{- /* vim: filetype=go
 Define a top level object
 */}}
 {{- define "k8s-rocker.object" }}
@@ -23,25 +23,25 @@ metadata:
     app.kubernetes.io/version: {{ default $.Chart.Version $.Values.version }}
     {{- range $key, $value := $meta.labels }}
     {{ $key | quote }}: {{ $value | quote }}
-    {{- end }} {{/* end of labels*/}}
+    {{- end }} {{- /* end of labels*/}}
   annotations:
     {{- range $key, $value := $meta.annotations }}
     {{ $key | quote }}: {{ $value | quote }}
-    {{- end }} {{/* end of annotations*/}}
-{{- end }}  {{/* end of k8s-rocker.object }}
-{{/*
+    {{- end }}{{- /* end of annotations*/}}
+{{- end }}{{- /* end of k8s-rocker.object */}}
+{{- /*
 
 Selector labels
 */}}
-{{- define "k8s-rocker.matchLabels" -}}
+{{- define "k8s-rocker.matchLabels" }}
 {{- $ := .  }}
 app.kubernetes.io/name: {{ include "k8s-rocker.name" $ }}
 app.kubernetes.io/instance: {{ $.Release.Name }}
 {{- end }}
-{{/*
+{{- /*
 
 Expand the name of the chart.
 */}}
-{{- define "k8s-rocker.name" -}}
+{{- define "k8s-rocker.name" }}
 {{- default .Chart.Name $.Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}

@@ -1,4 +1,4 @@
-{{/* vim: filetype=go
+{{- /* vim: filetype=go
 deployment:
   autoscaling:
     meta:
@@ -36,5 +36,5 @@ spec:
           type: 'Utilization'
           averageUtilization: {{ . }}
     {{- end }}
-{{- end }}{{/* end of .autoscaling */}}
-{{- end }}{{/* end of .Values.deployment */}}
+{{- end }}{{- /* end of .autoscaling */}}
+{{- end }}{{- /* end of .Values.deployment */}}
