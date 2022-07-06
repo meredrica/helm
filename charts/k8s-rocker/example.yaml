@@ -19,6 +19,7 @@ volumeClaims:
 
 secrets:
   'name':
+    immutable: false
     meta:
       annotations:
         bar: baz
