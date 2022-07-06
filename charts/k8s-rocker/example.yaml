@@ -113,10 +113,10 @@ deployment:
     meta:
       annotations:
         "some": "scaler"
-    minReplicas: 1
-    maxReplicas: 10
-    targetCPU: 80
-    targetMemory: 80
+    minReplicas: 1 # default is 1
+    maxReplicas: 10 # no default
+    targetCPU: 80 # default is 80
+    targetMemory: 80 # default is 80
 
 statefulset:
   name: 'statefulsetname'
