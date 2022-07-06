@@ -1,5 +1,11 @@
 Thanks for using k8s-rocker!
 
 {{- with .Values.service }}
-WARNING: specifying a single service is DEPRECATED and will be removed with 0.1.0
+!! WARNING: specifying a single service is DEPRECATED and will be removed with 0.1.0
+{{- end }}
+{{- with .Values.secrets}}
+{{- with .binary}}
+WARNING: using secrets.binary is DEPRECATED
+and will be removed with 0.1.0.
+{{- end }}
 {{- end }}
