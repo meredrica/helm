@@ -170,12 +170,16 @@ volumeMounts:
 {{- with .volumes }}
 {{- range $name, $volume:= .}}
   - name: pvc-{{ $name }}
+    {{- if (kindIs "string" $volume ) }}
+    mountPath: {{ $volume }}
+    {{- else }}
     mountPath: {{ required "volume.path is required" $volume.path }}
     {{- with $volume.readOnly }}
     readOnly: {{ . }}
     {{- end }}
     {{- with $volume.subPath }}
     subPath: {{ . }}
+    {{- end }}
     {{- end }}
 {{- end }}{{- /* end of volumes range */}}
 {{- end }}{{- /* end of volumeMounts */}}

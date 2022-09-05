@@ -90,6 +90,7 @@ pod: # the main pod
           path: '/some/path'
           readOnly: true
           subPath: '.something'
+        'other': '/to/this/path'
       secrets:
         'secretname': '/secret/path'
       configmaps:
