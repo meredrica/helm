@@ -20,6 +20,7 @@ It's kubernetes native only (no openshift dependencies)
 - [Service](https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/)
 - [Deployments](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/) with optional [Horizontal Pod Autoscaling](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/horizontal-pod-autoscaler-v2beta2/) `v2beta2`.
 - [Stateful Sets](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/stateful-set-v1/)
+- [CronJobs](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/cron-job-v1/)
 
 # How To
 See the [example](example.yaml) file.
