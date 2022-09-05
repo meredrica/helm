@@ -1,0 +1,21 @@
+{{- /* vim: filetype=go
+cronjobs:
+  'name':
+    meta:
+    schedule: '@midnight'
+    pod: # podspec like above
+*/}}
+{{- with .Values.cronjobs }}
+{{- range $name, $job := .}}
+{{ include "k8s-rocker.object" (list $ "batch/v1" "CronJob" $name $job .) }}
+spec:
+  schedule: '{{ default "@midnight" $job.schedule }}'
+  jobTemplate:
+    spec:
+      containers:
+        {{- range $name, $container := $job.pod }}
+        - {{- include "k8s-rocker.container" (list $ $name $container) | indent 10 }}
+        {{- end }}  {{- /* end of range $job.pod */}}
+---
+{{- end }}
+{{- end }}

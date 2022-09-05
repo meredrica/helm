@@ -1,5 +1,5 @@
 nameOverride: # defaults to .Chart.Name
-restart: "Always"
+restart: 'Always'
 version: # defaults to .Chart.Version
 
 meta: # added to all objects
@@ -112,7 +112,7 @@ deployment:
   autoscaling:
     meta:
       annotations:
-        "some": "scaler"
+        'some': 'scaler'
     minReplicas: 1 # default is 1
     maxReplicas: 10 # no default
     targetCPU: 80 # default is 80
@@ -141,6 +141,18 @@ services:
     meta: # additional metadata
       labels:
         foo: bar
+
+cronjobs:
+  'name':
+    meta:
+    schedule: '@midnight' # default is midnight
+    pod: # podspec like above
+      'echo':
+        image: busybox
+        command:
+          - echo
+        args:
+          - 'hello'
 
 
 ingress:
