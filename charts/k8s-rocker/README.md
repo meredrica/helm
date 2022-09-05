@@ -24,3 +24,8 @@ It's kubernetes native only (no openshift dependencies)
 
 # How To
 See the [example](example.yaml) file.
+
+# Versions
+Patch versions are always downward compatible.
+Minors remove deprecated values etc.
+Majors (usually) require you to rewrite everyhting.
