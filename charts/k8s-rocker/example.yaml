@@ -147,6 +147,7 @@ cronjobs:
   'name':
     meta:
     schedule: '@midnight' # default is midnight
+    restartPolicy: 'OnFailure' # default is OnFailure. can be 'Never' too
     pod: # podspec like above
       'echo':
         image: busybox
@@ -154,7 +155,6 @@ cronjobs:
           - echo
         args:
           - 'hello'
-
 
 ingress:
   'name':

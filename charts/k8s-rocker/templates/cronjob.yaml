@@ -14,10 +14,13 @@ spec:
     spec:
       template:
         spec:
+          restartPolicy: {{ default "OnFailure" $job.restart}}
           containers:
             {{- range $name, $container := $job.pod }}
             - {{- include "k8s-rocker.container" (list $ $name $container) | indent 14 }}
             {{- end }}  {{- /* end of range $job.pod */}}
+          {{- include "k8s-rocker.volumes" $job.pod | indent 10 }}
+
 ---
 {{- end }}
 {{- end }}
