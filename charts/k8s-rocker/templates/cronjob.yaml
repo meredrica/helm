@@ -12,10 +12,12 @@ spec:
   schedule: '{{ default "@midnight" $job.schedule }}'
   jobTemplate:
     spec:
-      containers:
-        {{- range $name, $container := $job.pod }}
-        - {{- include "k8s-rocker.container" (list $ $name $container) | indent 10 }}
-        {{- end }}  {{- /* end of range $job.pod */}}
+      template:
+        spec:
+          containers:
+            {{- range $name, $container := $job.pod }}
+            - {{- include "k8s-rocker.container" (list $ $name $container) | indent 14 }}
+            {{- end }}  {{- /* end of range $job.pod */}}
 ---
 {{- end }}
 {{- end }}
