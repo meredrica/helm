@@ -20,21 +20,17 @@ spec:
   minReplicas: {{ default 1 .minReplicas }}
   maxReplicas: {{ required "deployment.autoscaling.maxReplicas is required" .maxReplicas }}
   metrics:
-    {{- with .targetCPU}}
     - type: Resource
       resource:
         name: cpu
         target:
           type: 'Utilization'
-          averageUtilization: {{ default 80 . }}
-    {{- end }}
-    {{- with .targetMemory }}
+          averageUtilization: {{ default 80 .targetCPU }}
     - type: Resource
       resource:
         name: memory
         target:
           type: 'Utilization'
-          averageUtilization: {{ default 80 . }}
-    {{- end }}
+          averageUtilization: {{ default 80 .targetMemory }}
 {{- end }}{{- /* end of .autoscaling */}}
 {{- end }}{{- /* end of .Values.deployment */}}
