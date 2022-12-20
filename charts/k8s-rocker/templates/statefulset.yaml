@@ -8,7 +8,7 @@ statefulset:
   minReadySeconds: # minimum ready seconds
 */}}
 {{- with .Values.statefulset }}
-{{ include "k8s-rocker.object" (list $ "apps/v1" "StatefulSet" (include "k8s-rocker.name"  $  ) .)
+{{- include "k8s-rocker.object" (list $ "apps/v1" "StatefulSet" (include "k8s-rocker.name"  $  ) .)
 }}
 spec:
   serviceName: {{ required "statefulset.name is required" .name }}

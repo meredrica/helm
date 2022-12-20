@@ -7,7 +7,7 @@ cronjobs:
 */}}
 {{- with .Values.cronjobs }}
 {{- range $name, $job := .}}
-{{ include "k8s-rocker.object" (list $ "batch/v1" "CronJob" $name $job .) }}
+{{- include "k8s-rocker.object" (list $ "batch/v1" "CronJob" $name $job .) }}
 spec:
   schedule: '{{ default "@midnight" $job.schedule }}'
   jobTemplate:

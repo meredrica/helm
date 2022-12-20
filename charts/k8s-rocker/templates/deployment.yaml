@@ -1,6 +1,8 @@
 {{- /* vim: filetype=go
 deployment:
   meta:
+  template:
+    meta:
   strategy: # default is rolling
   minReadySeconds: # minimum ready seconds
   autoscaling:
@@ -12,7 +14,7 @@ deployment:
 
 */}}
 {{- with .Values.deployment }}
-{{ include "k8s-rocker.object" (list $ "apps/v1" "Deployment" (include "k8s-rocker.name"  $  ) .)
+{{- include "k8s-rocker.object" (list $ "apps/v1" "Deployment" (include "k8s-rocker.name"  $  ) .)
 }}
 spec:
   selector:
@@ -22,9 +24,11 @@ spec:
   strategy:
     type: {{ default "RollingUpdate" .strategy }}
   template:
-    metadata:
-      labels:
-      {{- include "k8s-rocker.matchLabels" $ | indent 8 }}
+  	{{- $meta:= dict }}
+		{{- if .template }}
+		{{- $meta = .template.meta }}
+		{{- end }}
+    {{- include "k8s-rocker.meta" ( list $ nil $meta ) | indent 4 }}
     spec:
       {{- include "k8s-rocker.podspec" $ | indent 6 }}
 {{- end }}

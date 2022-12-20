@@ -1,53 +1,58 @@
 nameOverride: # defaults to .Chart.Name
-restart: 'Always'
+restart: "Always"
 version: # defaults to .Chart.Version
 
 meta: # added to all objects
-  labels:
-    metalabel: foo
   annotations:
-    metaannotation: bar
+    meta: annotation
+  labels:
+    meta: label
 
 volumeClaims:
-  'name':
+  "claimName":
     meta:
       annotations:
-        bar: baz
-        vol: 1
-    mode: 'ReadWriteOnce'
-    storage: '500Mi'
+        volume: annotation
+      labels:
+        volume: label
+    mode: "ReadWriteOnce" # default
+    storage: "500Mi"
 
 secrets:
-  'name':
+  "secretName":
     immutable: false
     meta:
       annotations:
-        bar: baz
+        secret: annotation
+      labels:
+        secret: label
     strings:
-      'key': |
+      "key": |
          some sting value
          possibly multiline
     files:
-      'key2': test/secrets/file.secret
-      'key3': test/secrets/image.jpg
+      "key2": test/secrets/file.secret
+      "key3": test/secrets/image.jpg
 
 configmaps:
-  'name':
+  "configmapName":
     meta:
       annotations:
-        bar: baz
+        configmap: annotation
+      labels:
+        configmap: label
     data:
-      'key': value
-      'key2': value2
+      "key": value
+      "key2": value2
     files:
-      'key3': test/configMap/test.yml
-      'key4': test/configMap/img.png
+      "key3": test/configMap/test.yml
+      "key4": test/configMap/img.png
 
 pod: # the main pod
-  'web':
+  "mainPod":
     image: nginx
     tag: # defaults to latest
-    policy: 'IfNotPresent' # imagePullPolicy
+    policy: "IfNotPresent" # imagePullPolicy
     cpu:
       min: 100m
       max: 200m
@@ -61,12 +66,12 @@ pod: # the main pod
       - $NAME
       - $raw-from
     ports:
-      'port-name':
+      "port-name":
         port: 80
-        protocol: 'TCP'
+        protocol: "TCP"
     env:
-      'NAME': 'SOME_ENV_VALUE'
-      'raw-from': # passed raw. see https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
+      "NAME": "SOME_ENV_VALUE"
+      "raw-from": # passed raw. see https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
         valueFrom:
           fieldRef:
             fieldPath: metadata.name
@@ -74,31 +79,31 @@ pod: # the main pod
       live: # a probe spec, passed raw. see https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
         httpGet:
           port: 80
-          path: '/'
+          path: "/"
       ready: # a probe spec, passed raw. defaults to live
         httpGet:
           port: 80
-          path: '/ready'
+          path: "/ready"
       start: # a probe spec, passed raw. defaults to live
         httpGet:
           port: 80
-          path: '/start'
-    restart: 'Always' # restartPolicy
+          path: "/start"
+    restart: "Always" # restartPolicy
     mounts: # mounts
       volumes:
-        'volumename':
-          path: '/some/path'
+        "volumename":
+          path: "/some/path"
           readOnly: true
-          subPath: '.something'
-        'other': '/to/this/path'
+          subPath: ".something"
+        "other": "/to/this/path"
       secrets:
-        'secretname': '/secret/path'
+        "secretname": "/secret/path"
       configmaps:
-        'configmapname': '/configmap/path'
+        "configmapname": "/configmap/path"
     raw: # passed raw into the container spec
 init:
-  # podspec for initing the pod
-  'foo':
+  # podspec for initing the deployment
+  "foo":
     image: busybox
     tag: # defaults to latest
     command:
@@ -108,60 +113,87 @@ test:
 
 deployment:
   meta:
-  strategy: 'RollingUpdate' # default is rolling
+    labels:
+      "deployment": "label"
+    annotations:
+      "deployment": "annotation"
+  template:
+    meta:
+      labels:
+        "template": "label"
+      annotations:
+        "template": "annotation"
+  strategy: "RollingUpdate" # default is rolling
   minReadySeconds: 0 # minimum ready seconds
   autoscaling:
     meta:
       annotations:
-        'some': 'scaler'
+        "autoscaling": "annotation"
+      labels:
+        "autoscaling": "label"
     minReplicas: 1 # default is 1
     maxReplicas: 10 # no default
     targetCPU: 80 # default is 80
     targetMemory: 80 # default is 80
 
 statefulset:
-  name: 'statefulsetname'
+  name: "statefulsetname"
   meta:
+    annotations:
+      "statefulset": "annotation"
+    labels:
+      "statefulset": "label"
   replicas: 1
-  policy: 'OrderedReady'
-  strategy: 'RollingUpdate'
+  policy: "OrderedReady"
+  strategy: "RollingUpdate"
   minReadySeconds: # minimum ready seconds
 
 services:
-  'someservice':
-    type: 'ClusterIP'
+  "someservice":
+    type: "ClusterIP"
     ports:
-      'name':
+      "name":
         port: 80
         target: 80 # defaults to port
-        protocol: 'tcp'
-      'port2':
+        protocol: "tcp"
+      "port2":
         port: 80
         target: 80 # defaults to port
-        protocol: 'tcp'
-    meta: # additional metadata
-      labels:
-        foo: bar
+        protocol: "tcp"
+  meta:
+    annotations:
+      "service": "annotation"
+    labels:
+      "service": "label"
 
 cronjobs:
-  'name':
+  "name":
     meta:
-    schedule: '@midnight' # default is midnight
-    restartPolicy: 'OnFailure' # default is OnFailure. can be 'Never' too
+      annotations:
+        "cronjob": "annotation"
+      labels:
+        "cronjob": "label"
+
+    schedule: "@midnight" # default is midnight
+    restartPolicy: "OnFailure" # default is OnFailure. can be "Never" too
     pod: # podspec like above
-      'echo':
+      "echo":
         image: busybox
         command:
           - echo
         args:
-          - 'hello'
+          - "hello"
 
 ingress:
-  'name':
+  "name":
     meta:
+      annotations:
+        "ingress": "annotation"
+      labels:
+        "ingress": "label"
     hosts:
-      'host.of.app':
-          '/':
-            type: 'Prefix'
-            to: 'servicename'
+      "host.of.app":
+          "/":
+            type: "Prefix"
+            to: "servicename"
             port: 8080
