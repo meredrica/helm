@@ -100,7 +100,7 @@ env:
   - name: {{ $name}}{{ $env | toYaml | nindent 4}}
   {{- else }}
   - name: {{ $name}}
-    value: {{ required "env value is required" $env }}
+    value: {{ required "env value is required" $env | quote }}
   {{- end }}{{- /* end of kindIs */}}
   {{- end }}
 {{- end }}

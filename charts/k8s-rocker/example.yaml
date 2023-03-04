@@ -71,6 +71,7 @@ pod: # the main pod
         protocol: "TCP"
     env:
       "NAME": "SOME_ENV_VALUE"
+      "some-number": 0 # auto stringification
       "raw-from": # passed raw. see https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#environment-variables
         valueFrom:
           fieldRef:
