@@ -138,10 +138,10 @@ resources:
   {{- end }}
   requests:
   {{- with $container.memory }}
-    memory: {{ .max}}
+    memory: {{ .min }}
   {{- end }}
   {{- with $container.cpu }}
-    cpu: {{ .min}}
+    cpu: {{ .min }}
   {{- end }}
 {{- end }}{{- /* end of $container.cpu || $container.memory */}}
 
