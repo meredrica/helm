@@ -37,7 +37,7 @@ Meta annotations
 {{- $in:= index . 2 }}
 {{- $meta:= dict }}
 {{- if $.Values.meta }}
-{{- $meta := $.Values.meta }}
+{{- $meta = $.Values.meta }}
 {{- end}}
 {{- if $in }}
 {{- $meta = (deepCopy $meta | merge $in )}}
