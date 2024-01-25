@@ -53,6 +53,9 @@ Define a container that can be reused
       'secretname': '/secret/path'
     configmaps:
       'configmapname': '/configmap/path'
+      'complexMap':
+        path: '/some/path'
+        subPath: '.something'
   raw: # passed raw into the container spec
 */}}
 {{- $ := index . 0 }}
@@ -152,9 +155,16 @@ resources:
 {{- with $container.mounts }}
 volumeMounts:
 {{- with .configmaps }}
-{{- range $name, $path:= . }}
+{{- range $name, $configmap:= . }}
   - name: config-{{ $name }}
-    mountPath: {{ $path }}
+    {{- if (kindIs "string" $configmap) }}
+    mountPath: {{ $configmap}}
+    {{- else }}
+    mountPath: {{ required "configmap.path is required" $configmap.path }}
+    {{- with $configmap.subPath }}
+    subPath: {{ . }}
+		{{- end }}
+		{{- end }}
 {{- end }}{{- /* end of configmap range */}}
 {{- end }}{{- /* end of configmaps
 
