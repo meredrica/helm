@@ -30,7 +30,7 @@ secrets:
       "key": |
          some sting value
          possibly multiline
-    files:
+    files: # to include a file, you need to copy the template to your chart/templates folder. this is a helm limitation
       "key2": test/secrets/file.secret
       "key3": test/secrets/image.jpg
 
@@ -44,7 +44,7 @@ configmaps:
     data:
       "key": value
       "key2": value2
-    files:
+    files: # to include a file, you need to copy the template to your chart/templates folder. this is a helm limitation
       "key3": test/configMap/test.yml
       "key4": test/configMap/img.png
 
@@ -161,6 +161,7 @@ services:
         port: 80
         target: 80 # defaults to port
         protocol: "tcp"
+        nodePort: 30000 # not set by default, only makes sense for "NodePort" services
   meta:
     annotations:
       "service": "annotation"
@@ -187,6 +188,7 @@ cronjobs:
 
 ingress:
   "name":
+    tls: 'tls-secret' # optional, if set, creates the tls entries
     meta:
       annotations:
         "ingress": "annotation"

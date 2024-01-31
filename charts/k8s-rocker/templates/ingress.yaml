@@ -3,6 +3,7 @@ ingress:
   'name':
     meta:
     class:
+    tls: tls-secret
     hosts:
       'host.of.app':
           '/':
@@ -32,6 +33,14 @@ spec:
                   number: {{ $path.port }}
           {{- end }}
     {{- end }}
+{{- with $ingress.tls }}
+  tls:
+    - hosts:
+    {{- range $host,$_ := $ingress.hosts }}
+      - {{ $host }}
+		{{- end }}
+      secretName: {{ . }}
+{{- end }}
 ---
 {{- end }}
 {{- end }}

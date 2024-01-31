@@ -38,9 +38,13 @@ spec:
       port: {{ required "service.port is required" .port }}
       targetPort: {{ default .port .target }}
       protocol: {{ default "TCP" .protocol }}
+      {{- with .nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
       {{- end }}
   {{- end }}
   selector:
     {{- include "k8s-rocker.matchLabels" $ | indent 6 }}
+---
 {{- end}}{{- /* end of service */}}
 {{- end}}{{- /* end of .values.services */}}
