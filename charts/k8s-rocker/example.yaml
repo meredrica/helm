@@ -15,7 +15,7 @@ volumeClaims:
         volume: annotation
       labels:
         volume: label
-    mode: "ReadWriteOnce" # default
+    acccessMode: "ReadWriteOnce" # default
     storage: "500Mi"
 
 secrets:
