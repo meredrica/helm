@@ -17,6 +17,7 @@ volumeClaims:
         volume: label
     acccessMode: "ReadWriteOnce" # default
     storage: "500Mi"
+    class: "some-class"
 
 secrets:
   "secretName":

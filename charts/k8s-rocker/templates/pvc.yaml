@@ -3,12 +3,16 @@ volumes:
   'myVolumeName':
     mode: 'ReadWriteOnce'
     storage: '500Mi'
+    class: some-storage-provider
 */}}
 {{- with .Values.volumeClaims }}
 {{- range $name, $volume:= . }}
 {{- include "k8s-rocker.object" (list $ "v1" "PersistentVolumeClaim" $name $volume)
 }}
 spec:
+  {{- with $volume.class }}
+  storageClassName: {{ . }}
+  {{- end }}
   accessModes:
     - {{ default "ReadWriteOnce" $volume.accessMode }}
   resources:
