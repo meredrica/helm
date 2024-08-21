@@ -21,9 +21,11 @@ spec:
   podManagementPolicy: {{ default "OrderedReady" .policy }}
   minReadySeconds: {{ default 0 .minReadySeconds }}
   template:
-    metadata:
-      labels:
-      {{- include "k8s-rocker.matchLabels" $ | indent 8 }}
+  	{{- $meta:= dict }}
+		{{- if .template }}
+		{{- $meta = .template.meta }}
+		{{- end }}
+    {{- include "k8s-rocker.meta" ( list $ nil $meta ) | indent 4 }}
     spec:
     {{- include "k8s-rocker.podspec" $ | indent 6 }}
 {{- end }}
