@@ -2,6 +2,14 @@ apiVersion: v1
 entries:
   k8s-rocker:
   - apiVersion: v2
+    created: "2024-08-22T11:28:53.022345449Z"
+    description: A general purpose kubernetes chart
+    digest: f70babd848f8e3ec4b3e38b8049585f4dde481d0ab133b1c1f64c4f111db418f
+    name: k8s-rocker
+    urls:
+    - https://github.com/meredrica/helm/releases/download/k8s-rocker-0.0.11/k8s-rocker-0.0.11.tgz
+    version: 0.0.11
+  - apiVersion: v2
     created: "2024-08-07T19:53:05.080439811Z"
     description: A general purpose kubernetes chart
     digest: 1429e5f9385f476105ba7627863f734315cfb75a7a57c61ac4f23782161ee3b6
@@ -83,4 +91,4 @@ entries:
     urls:
     - https://github.com/meredrica/helm/releases/download/yaml-rocker-0.0.2/yaml-rocker-0.0.2.tgz
     version: 0.0.2
-generated: "2024-08-07T19:53:05.080487771Z"
+generated: "2024-08-22T11:28:53.022397477Z"
