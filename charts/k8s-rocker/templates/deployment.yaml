@@ -24,10 +24,10 @@ spec:
   strategy:
     type: {{ default "RollingUpdate" .strategy }}
   template:
-  	{{- $meta:= dict }}
-		{{- if .template }}
-		{{- $meta = .template.meta }}
-		{{- end }}
+    {{- $meta:= dict }}
+    {{- if .template }}
+    {{- $meta = .template.meta }}
+    {{- end }}
     {{- include "k8s-rocker.meta" ( list $ nil $meta ) | indent 4 }}
     spec:
       {{- include "k8s-rocker.podspec" $ | indent 6 }}
