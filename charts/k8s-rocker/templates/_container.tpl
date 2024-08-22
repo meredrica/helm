@@ -163,8 +163,8 @@ volumeMounts:
     mountPath: {{ required "configmap.path is required" $configmap.path }}
     {{- with $configmap.subPath }}
     subPath: {{ . }}
-		{{- end }}
-		{{- end }}
+    {{- end }}
+    {{- end }}
 {{- end }}{{- /* end of configmap range */}}
 {{- end }}{{- /* end of configmaps
 
