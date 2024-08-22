@@ -145,6 +145,12 @@ statefulset:
       "statefulset": "annotation"
     labels:
       "statefulset": "label"
+  template:
+    meta:
+      labels:
+        "template": "label"
+      annotations:
+        "template": "annotations"
   replicas: 1
   policy: "OrderedReady"
   strategy: "RollingUpdate"
