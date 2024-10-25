@@ -15,6 +15,10 @@ initContainers:
 - {{- include "k8s-rocker.container" (list $ $name $init) | indent 4 }}
 {{- end }}
 {{- end }}
+{{- with $.Values.affinity }}
+affinity:
+  {{- . | toYaml | nindent 2 }}
+{{- end }}
 containers:
 {{- range $name, $container := $.Values.pod }}
   - {{- include "k8s-rocker.container" (list $ $name $container) | indent 4 }}

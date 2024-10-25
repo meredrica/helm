@@ -48,7 +48,6 @@ configmaps:
     files: # to include a file, you need to copy the template to your chart/templates folder. this is a helm limitation
       "key3": test/configMap/test.yml
       "key4": test/configMap/img.png
-
 pod: # the main pod
   "mainPod":
     image: nginx
@@ -103,6 +102,16 @@ pod: # the main pod
       configmaps:
         "configmapname": "/configmap/path"
     raw: # passed raw into the container spec
+affinity:
+  podAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - key: security
+          operator: In
+          values:
+          - S1
+      topologyKey: failure-domain.beta.kubernetes.io/zone
 init:
   # podspec for initing the deployment
   "foo":
