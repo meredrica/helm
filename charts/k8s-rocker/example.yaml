@@ -102,6 +102,8 @@ pod: # the main pod
         "secretname": "/secret/path"
       configmaps:
         "configmapname": "/configmap/path"
+    security: # supports the full security context, see https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
+      privileged: true
     raw: # passed raw into the container spec
 init:
   # podspec for initing the deployment
