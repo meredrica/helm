@@ -116,6 +116,7 @@ test:
   # podspec as above, used for helm test
 
 deployment:
+  serviceAccount: "someaccount"
   meta:
     labels:
       "deployment": "label"
