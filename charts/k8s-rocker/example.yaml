@@ -116,7 +116,6 @@ test:
   # podspec as above, used for helm test
 
 deployment:
-  serviceAccount: "someaccount"
   meta:
     labels:
       "deployment": "label"
@@ -128,6 +127,7 @@ deployment:
         "template": "label"
       annotations:
         "template": "annotation"
+    serviceAccount: "someaccount"
   strategy: "RollingUpdate" # default is rolling
   minReadySeconds: 0 # minimum ready seconds
   autoscaling:

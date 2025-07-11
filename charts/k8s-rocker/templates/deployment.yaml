@@ -17,10 +17,6 @@ deployment:
 {{- include "k8s-rocker.object" (list $ "apps/v1" "Deployment" (include "k8s-rocker.name"  $  ) .)
 }}
 spec:
-  {{- with .serviceAccount }}
-  serviceAccountName: {{ . }}
-  automountServiceAccountToken: true
-  {{- end }}
   selector:
     matchLabels:
     {{- include "k8s-rocker.matchLabels" $ | indent 6}}
@@ -34,5 +30,9 @@ spec:
     {{- end }}
     {{- include "k8s-rocker.meta" ( list $ nil $meta ) | indent 4 }}
     spec:
+      {{- if (and .template .template.serviceAccount) }}
+      serviceAccountName: {{ .template.serviceAccount }}
+      automountServiceAccountToken: true
+      {{- end }}
       {{- include "k8s-rocker.podspec" $ | indent 6 }}
 {{- end }}
