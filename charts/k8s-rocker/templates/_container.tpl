@@ -209,6 +209,6 @@ securityContext:
 ---- raw block
 */}}
 {{- with $container.raw }}
-{{ . | toYaml | nindent 2 }}
+{{ . | toYaml }}
 {{- end }}{{- /* end of raw */}}
 {{- end }}{{- /* end of k8s-rocker.container */}}

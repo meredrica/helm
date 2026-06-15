@@ -105,6 +105,11 @@ pod: # the main pod
     security: # supports the full security context, see https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1
       privileged: true
     raw: # passed raw into the container spec
+      lifecycle:
+        preStop:
+          exec: ["/bin/sh", "-c", "sleep 10"]
+      terminationGracePeriodSeconds: 45
+
 init:
   # podspec for initing the deployment
   "foo":
