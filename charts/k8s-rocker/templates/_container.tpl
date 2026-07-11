@@ -56,6 +56,8 @@ Define a container that can be reused
       'complexMap':
         path: '/some/path'
         subPath: '.something'
+  security:
+    privileged: false
   raw: # passed raw into the container spec
 */}}
 {{- $ := index . 0 }}
@@ -196,9 +198,17 @@ volumeMounts:
 {{- end }}{{- /* end of $container.mounts */}}
 {{- /*
 
+---- security context
+*/}}
+{{- with $container.security }}
+securityContext:
+{{ . | toYaml | indent 2 }}
+{{- end }}{{- /* end of security*/}}
+{{- /*
+
 ---- raw block
 */}}
 {{- with $container.raw }}
-{{ . | toYaml | nindent 2 }}
+{{ . | toYaml }}
 {{- end }}{{- /* end of raw */}}
 {{- end }}{{- /* end of k8s-rocker.container */}}
